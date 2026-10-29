@@ -271,136 +271,169 @@ const getImgUrl = (path) => {
       </p>
     </footer>
 
-    <script>
-      // ---------- Language ----------
-      const root = document.documentElement;
-      const select = document.getElementById('lang-select') as HTMLSelectElement;
+    <script define:vars={{ baseUrl: import.meta.env.BASE_URL }}>
+  // ---------- Language ----------
+  const root = document.documentElement;
+  const select = document.getElementById('lang-select');
 
-      function setLang(lang: string) {
-        root.dataset.lang = lang;
-        root.lang = lang;
-        select.value = lang;
-        localStorage.setItem('lang', lang);
+  function setLang(lang) {
+    root.dataset.lang = lang;
+    root.lang = lang;
+    if (select) select.value = lang;
+    localStorage.setItem('lang', lang);
+  }
+
+  document.querySelectorAll('[data-set-lang]').forEach((btn) => {
+    btn.addEventListener('click', () => setLang(btn.getAttribute('data-set-lang')));
+  });
+  
+  if (select) {
+    select.addEventListener('change', (e) => setLang(e.target.value));
+  }
+  setLang(localStorage.getItem('lang') || 'en');
+
+  // ---------- Drawer ----------
+  const drawer = document.getElementById('drawer');
+  const overlay = document.getElementById('overlay');
+  const openMenuBtn = document.getElementById('open-menu');
+  const closeMenuBtn = document.getElementById('close-menu');
+  const linkMenu = document.getElementById('link-menu');
+
+  function openMenu() {
+    if (drawer && overlay) {
+      drawer.classList.remove('-translate-x-full');
+      overlay.classList.remove('opacity-0', 'pointer-events-none');
+    }
+  }
+  function closeMenu() {
+    if (drawer && overlay) {
+      drawer.classList.add('-translate-x-full');
+      overlay.classList.add('opacity-0', 'pointer-events-none');
+    }
+  }
+
+  if (openMenuBtn) openMenuBtn.addEventListener('click', openMenu);
+  if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMenu);
+  if (linkMenu) linkMenu.addEventListener('click', (e) => {
+    e.preventDefault();
+    closeMenu();
+  });
+  if (overlay) overlay.addEventListener('click', closeMenu);
+
+  // ---------- Popups ----------
+  function openModal(id) {
+    const modal = document.getElementById(id);
+    if (modal) {
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+  }
+  function closeAllModals() {
+    document.querySelectorAll('.modal').forEach((m) => {
+      m.classList.add('hidden');
+      m.classList.remove('flex');
+    });
+  }
+
+  const openContactBtn = document.getElementById('open-contact');
+  const openFeedbackBtn = document.getElementById('open-feedback');
+
+  if (openContactBtn) openContactBtn.addEventListener('click', () => {
+    closeMenu();
+    openModal('contact-modal');
+  });
+  if (openFeedbackBtn) openFeedbackBtn.addEventListener('click', () => {
+    closeMenu();
+    openModal('feedback-modal');
+  });
+
+  document.querySelectorAll('[data-close-modal]').forEach((btn) => {
+    btn.addEventListener('click', closeAllModals);
+  });
+  document.querySelectorAll('.modal').forEach((modal) => {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeAllModals();
+    });
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeAllModals();
+      closeMenu();
+    }
+  });
+
+  // ---------- Feedback -> WhatsApp ----------
+  const sendFeedbackBtn = document.getElementById('send-feedback');
+  if (sendFeedbackBtn) {
+    sendFeedbackBtn.addEventListener('click', () => {
+      const box = document.getElementById('feedback-text');
+      if (!box) return;
+      const text = box.value.trim();
+      if (!text) {
+        box.focus();
+        return;
+      }
+      window.open('https://wa.me/251913226793?text=' + encodeURIComponent(text), '_blank');
+      box.value = '';
+      closeAllModals();
+    });
+  }
+
+  // ---------- Item details ----------
+  function fillList(listId, wrapId, values, isAllergen) {
+    const list = document.getElementById(listId);
+    const wrap = document.getElementById(wrapId);
+    if (!list || !wrap) return;
+    
+    list.innerHTML = '';
+
+    if (!values || values.length === 0) {
+      wrap.classList.add('hidden');
+      return;
+    }
+
+    values.forEach((value) => {
+      const chip = document.createElement('span');
+      chip.textContent = value;
+      chip.className = isAllergen
+        ? 'bg-red-100 text-red-700 font-semibold rounded-full px-3 py-1 text-sm'
+        : 'bg-[#F5B800]/20 text-[#6B4430] font-semibold rounded-full px-3 py-1 text-sm';
+      list.appendChild(chip);
+    });
+    wrap.classList.remove('hidden');
+  }
+
+  document.querySelectorAll('.item-card').forEach((card) => {
+    card.addEventListener('click', () => {
+      const item = JSON.parse(card.dataset.item);
+
+      const img = document.getElementById('item-image');
+      if (img) {
+        // FIX: Combine baseUrl with the image path for GitHub Pages
+        const cleanPath = item.image.startsWith('/') ? item.image.slice(1) : item.image;
+        const fullBase = baseUrl.endsWith('/') ? baseUrl : baseUrl + '/';
+        
+        img.src = `${fullBase}${cleanPath}`;
+        img.alt = item.name.en;
       }
 
-      document.querySelectorAll('[data-set-lang]').forEach((btn) => {
-        btn.addEventListener('click', () => setLang((btn as HTMLElement).dataset.setLang!));
-      });
-      select.addEventListener('change', () => setLang(select.value));
-      setLang(localStorage.getItem('lang') || 'en');
-
-      // ---------- Drawer ----------
-      const drawer = document.getElementById('drawer')!;
-      const overlay = document.getElementById('overlay')!;
-
-      function openMenu() {
-        drawer.classList.remove('-translate-x-full');
-        overlay.classList.remove('opacity-0', 'pointer-events-none');
+      const nameEl = document.getElementById('item-name');
+      if (nameEl) {
+        nameEl.innerHTML = `<span class="lang-en">${item.name.en}</span><span class="lang-am">${item.name.am}</span>`;
       }
-      function closeMenu() {
-        drawer.classList.add('-translate-x-full');
-        overlay.classList.add('opacity-0', 'pointer-events-none');
+      
+      const priceEl = document.getElementById('item-price');
+      if (priceEl) {
+        priceEl.textContent = `${item.price} ETB`;
       }
 
-      document.getElementById('open-menu')!.addEventListener('click', openMenu);
-      document.getElementById('close-menu')!.addEventListener('click', closeMenu);
-      document.getElementById('link-menu')!.addEventListener('click', (e) => {
-        e.preventDefault();
-        closeMenu();
-      });
-      overlay.addEventListener('click', closeMenu);
+      fillList('item-ingredients', 'item-ingredients-wrap', item.ingredients, false);
+      fillList('item-allergens', 'item-allergens-wrap', item.allergens, true);
 
-      // ---------- Popups ----------
-      function openModal(id: string) {
-        const modal = document.getElementById(id)!;
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-      }
-      function closeAllModals() {
-        document.querySelectorAll('.modal').forEach((m) => {
-          m.classList.add('hidden');
-          m.classList.remove('flex');
-        });
-      }
-
-      document.getElementById('open-contact')!.addEventListener('click', () => {
-        closeMenu();
-        openModal('contact-modal');
-      });
-      document.getElementById('open-feedback')!.addEventListener('click', () => {
-        closeMenu();
-        openModal('feedback-modal');
-      });
-
-      document.querySelectorAll('[data-close-modal]').forEach((btn) => {
-        btn.addEventListener('click', closeAllModals);
-      });
-      document.querySelectorAll('.modal').forEach((modal) => {
-        modal.addEventListener('click', (e) => {
-          if (e.target === modal) closeAllModals();
-        });
-      });
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-          closeAllModals();
-          closeMenu();
-        }
-      });
-
-      // ---------- Feedback -> WhatsApp ----------
-      document.getElementById('send-feedback')!.addEventListener('click', () => {
-        const box = document.getElementById('feedback-text') as HTMLTextAreaElement;
-        const text = box.value.trim();
-        if (!text) {
-          box.focus();
-          return;
-        }
-        window.open('https://wa.me/251913226793?text=' + encodeURIComponent(text), '_blank');
-        box.value = '';
-        closeAllModals();
-      });
-
-      // ---------- Item details ----------
-      function fillList(listId: string, wrapId: string, values: string[] | undefined, isAllergen: boolean) {
-        const list = document.getElementById(listId)!;
-        const wrap = document.getElementById(wrapId)!;
-        list.innerHTML = '';
-
-        if (!values || values.length === 0) {
-          wrap.classList.add('hidden');
-          return;
-        }
-
-        values.forEach((value) => {
-          const chip = document.createElement('span');
-          chip.textContent = value;
-          chip.className = isAllergen
-            ? 'bg-red-100 text-red-700 font-semibold rounded-full px-3 py-1 text-sm'
-            : 'bg-[#F5B800]/20 text-[#6B4430] font-semibold rounded-full px-3 py-1 text-sm';
-          list.appendChild(chip);
-        });
-        wrap.classList.remove('hidden');
-      }
-
-      document.querySelectorAll('.item-card').forEach((card) => {
-        card.addEventListener('click', () => {
-          const item = JSON.parse((card as HTMLElement).dataset.item!);
-
-          const img = document.getElementById('item-image') as HTMLImageElement;
-          img.src = item.image;
-          img.alt = item.name.en;
-
-          document.getElementById('item-name')!.innerHTML =
-            `<span class="lang-en">${item.name.en}</span><span class="lang-am">${item.name.am}</span>`;
-          document.getElementById('item-price')!.textContent = `${item.price} ETB`;
-
-          fillList('item-ingredients', 'item-ingredients-wrap', item.ingredients, false);
-          fillList('item-allergens', 'item-allergens-wrap', item.allergens, true);
-
-          openModal('item-modal');
-        });
-      });
-    </script>
+      openModal('item-modal');
+    });
+  });
+</script>
 
     <style is:global>
       button, a, select, [role='button'] { cursor: pointer; }
