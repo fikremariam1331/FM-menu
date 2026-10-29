@@ -6,6 +6,21 @@ const categorizedItems = menuData.categories.map((category) => ({
   ...category,
   items: menuData.items.filter((item) => item.categoryId === category.id),
 }));
+
+// Helper to safely format image paths for GitHub Pages
+const getImgUrl = (path) => {
+  if (!path) return '';
+  // Remove leading slash if it exists from the path
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+  
+  // Ensure the base URL has a trailing slash
+  const base = import.meta.env.BASE_URL.endsWith('/') 
+    ? import.meta.env.BASE_URL 
+    : import.meta.env.BASE_URL + '/';
+    
+  // Combine them perfectly (e.g., "/FM-menu/" + "images/...")
+  return `${base}${cleanPath}`;
+};
 ---
 
 <html lang="en" data-lang="en">
@@ -14,10 +29,12 @@ const categorizedItems = menuData.categories.map((category) => ({
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>{menuData.restaurant} Menu</title>
       <meta name="description" content="Digital menu" />
-      <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-      <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-      <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-      <link rel="manifest" href="/site.webmanifest" />
+      
+      <!-- Favicons and Manifest wrapped with getImgUrl -->
+      <link rel="apple-touch-icon" sizes="180x180" href={getImgUrl('/apple-touch-icon.png')} />
+      <link rel="icon" type="image/png" sizes="32x32" href={getImgUrl('/favicon-32x32.png')} />
+      <link rel="icon" type="image/png" sizes="16x16" href={getImgUrl('/favicon-16x16.png')} />
+      <link rel="manifest" href={getImgUrl('/site.webmanifest')} />
   </head>
   <body class="bg-[#FBF8F3] text-[#6B4430] font-sans antialiased">
     <!-- Overlay -->
@@ -125,7 +142,7 @@ const categorizedItems = menuData.categories.map((category) => ({
         </button>
         <div class="flex items-center gap-2 min-w-0">
 
-          <img src="/images/fm_logo.png" alt={menuData.restaurant} class="h-14 sm:h-20 w-auto object-contain" />
+          <img src={getImgUrl('/images/fm_logo.png')} alt={menuData.restaurant} class="h-14 sm:h-20 w-auto object-contain" />
 
           <h1 class="text-[#F5B800] text-xl sm:text-3xl font-extrabold leading-tight">{menuData.restaurant}</h1>
 
@@ -180,7 +197,8 @@ const categorizedItems = menuData.categories.map((category) => ({
               href={`#${category.id}`}
               class="w-44 shrink-0 bg-white rounded-2xl shadow-md overflow-hidden flex flex-col border-b-4 border-[#2E9E78]"
             >
-              <img src={category.image} alt={category.name.en} class="w-full h-32 object-cover" />
+              <img src={getImgUrl(category.image)} alt={category.name.en} class="w-full h-32 object-cover" />
+
               <span class="px-2 py-4 text-center font-bold text-sm text-[#6B4430]">
                 <span class="lang-en">{category.name.en}</span>
                 <span class="lang-am">{category.name.am}</span>
@@ -203,7 +221,7 @@ const categorizedItems = menuData.categories.map((category) => ({
                   class="item-card flex bg-white rounded-xl shadow-md overflow-hidden h-[185px] cursor-pointer"
                   data-item={JSON.stringify(item)}
                 >
-                <img src={item.image} alt={item.name.en} class="w-44 h-full object-cover shrink-0" />
+                <img src={getImgUrl(item.image)} alt={item.name.en} class="w-44 h-full object-cover shrink-0" />
                 <div class="flex flex-col justify-center px-5">
                   <h3 class="text-2xl font-bold leading-tight text-[#6B4430]">
                     <span class="lang-en">{item.name.en}</span>
