@@ -1,11 +1,396 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import '../styles/global.css';
+import menuData from '../data/menu.json';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const categorizedItems = menuData.categories.map((category) => ({
+  ...category,
+  items: menuData.items.filter((item) => item.categoryId === category.id),
+}));
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<html lang="en" data-lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>{menuData.restaurant} Menu</title>
+      <meta name="description" content="Digital menu" />
+      <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+      <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+      <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+      <link rel="manifest" href="/site.webmanifest" />
+  </head>
+  <body class="bg-[#FBF8F3] text-[#6B4430] font-sans antialiased">
+    <!-- Overlay -->
+    <div id="overlay" class="fixed inset-0 bg-black/40 z-[60] opacity-0 pointer-events-none transition-opacity duration-300"></div>
+
+    <!-- Side drawer -->
+    <aside id="drawer" class="fixed top-0 left-0 h-full w-72 max-w-[80%] bg-white z-[70] shadow-xl -translate-x-full transition-transform duration-300 flex flex-col">
+      <div class="relative flex justify-center pt-6 pb-4 px-4">
+        <img src="/images/fm_logo.png" alt={menuData.restaurant} class="h-24 w-auto max-w-[180px] object-contain" />
+        <button id="close-menu" class="absolute top-4 right-4 text-3xl leading-none text-black" aria-label="Close menu">✕</button>
+      </div>
+
+      <nav class="px-8 pt-6 space-y-7 text-lg text-gray-800">
+        <a href="#" id="link-menu" class="flex items-center gap-4">
+          <span class="text-[#6B4430] text-xl">🍴</span>
+          <span><span class="lang-en">Menu</span><span class="lang-am">ምናሌ</span></span>
+        </a>
+
+        <button id="open-feedback" class="flex items-center gap-4 w-full text-left">
+          <span class="text-[#6B4430] text-xl">💬</span>
+          <span><span class="lang-en">Feedback</span><span class="lang-am">አስተያየት</span></span>
+        </button>
+
+        <button id="open-contact" class="flex items-center gap-4 w-full text-left">
+          <span class="text-[#6B4430] text-xl">📞</span>
+          <span><span class="lang-en">Contact Us</span><span class="lang-am">ያግኙን</span></span>
+        </button>
+
+        <a href="https://goo.gl/maps/Tfz5rStmEQUKkSCf9?g_st=atm" target="_blank" rel="noopener" class="flex items-center gap-4">
+          <span class="text-[#F5B800] text-xl">★</span>
+          <span><span class="lang-en">Review</span><span class="lang-am">ግምገማ</span></span>
+        </a>
+      </nav>
+
+      <!-- Social icons -->
+      <div class="flex justify-center gap-6 mt-10 text-[#6B4430]">
+        <a href="#" aria-label="Facebook">
+          <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </a>
+        <a href="#" aria-label="Instagram">
+          <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
+        <a href="#" aria-label="TikTok">
+          <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+        </a>
+      </div>
+
+      <div class="mt-auto pb-6 text-center text-gray-500 text-sm">
+        <span class="lang-en">Powered by</span><span class="lang-am">የተሰራው በ</span>
+        <span class="font-bold text-[#2E9E78]"> FM Tech</span>
+      </div>
+    </aside>
+
+    <!-- Contact popup -->
+    <div id="contact-modal" class="modal fixed inset-0 z-[80] hidden items-center justify-center bg-black/50 px-6">
+      <div class="bg-white rounded-2xl w-full max-w-sm p-6 relative">
+        <button data-close-modal class="absolute top-3 right-4 text-2xl leading-none text-black" aria-label="Close">✕</button>
+        <h3 class="text-2xl font-extrabold text-[#6B4430] mb-5">
+          <span class="lang-en">Contact Us</span><span class="lang-am">ያግኙን</span>
+        </h3>
+        <div class="space-y-3">
+          <a href="tel:+251913226793" class="block text-center bg-[#2E9E78] text-white font-bold rounded-lg py-3">
+            📞 +251 913 226 793
+          </a>
+          <a href="tel:+251913929748" class="block text-center bg-[#2E9E78] text-white font-bold rounded-lg py-3">
+            📞 +251 913 929 748
+          </a>
+          <a href="https://goo.gl/maps/Tfz5rStmEQUKkSCf9?g_st=atm" target="_blank" rel="noopener" class="block text-center bg-[#F5B800] text-[#6B4430] font-bold rounded-lg py-3">
+            📍 <span class="lang-en">Open in Google Maps</span><span class="lang-am">በጎግል ካርታ ክፈት</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feedback popup -->
+    <div id="feedback-modal" class="modal fixed inset-0 z-[80] hidden items-center justify-center bg-black/50 px-6">
+      <div class="bg-white rounded-2xl w-full max-w-sm p-6 relative">
+        <button data-close-modal class="absolute top-3 right-4 text-2xl leading-none text-black" aria-label="Close">✕</button>
+        <h3 class="text-2xl font-extrabold text-[#6B4430] mb-4">
+          <span class="lang-en">Feedback</span><span class="lang-am">አስተያየት</span>
+        </h3>
+        <textarea
+          id="feedback-text"
+          rows="5"
+          class="w-full border-2 border-[#6B4430]/30 rounded-lg p-3 text-gray-800 focus:outline-none focus:border-[#2E9E78]"
+          placeholder="Write your feedback here..."
+        ></textarea>
+        <button id="send-feedback" class="mt-4 w-full bg-[#2E9E78] text-white font-bold rounded-lg py-3">
+          <span class="lang-en">Send via WhatsApp</span><span class="lang-am">በዋትስአፕ ላክ</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Header -->
+
+        <!-- Header -->
+    <header class="sticky top-0 z-50 bg-[#6B4430] border-b-4 border-[#2E9E78]">
+      <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
+        <button id="open-menu" class="bg-white rounded-lg w-12 h-12 flex items-center justify-center" aria-label="Open menu">
+          <span class="block w-6 space-y-1.5">
+            <span class="block h-0.5 bg-[#2E9E78]"></span>
+            <span class="block h-0.5 bg-[#2E9E78]"></span>
+            <span class="block h-0.5 bg-[#2E9E78]"></span>
+          </span>
+        </button>
+        <div class="flex items-center gap-2 min-w-0">
+
+          <img src="/images/fm_logo.png" alt={menuData.restaurant} class="h-14 sm:h-20 w-auto object-contain" />
+
+          <h1 class="text-[#F5B800] text-xl sm:text-3xl font-extrabold leading-tight">{menuData.restaurant}</h1>
+
+      </div>
+        <select id="lang-select" class="bg-white text-[#6B4430] font-semibold rounded-lg px-2 py-2 text-sm">
+          <option value="en">🇬🇧 En</option>
+          <option value="am">🇪🇹 አማ</option>
+        </select>
+      </div>
+    </header>
+
+        <!-- Item details popup -->
+    <div id="item-modal" class="modal fixed inset-0 z-[80] hidden items-center justify-center bg-black/50 px-4">
+      <div class="bg-white rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto relative">
+        <button data-close-modal class="absolute top-3 right-3 z-10 bg-white/90 rounded-full w-9 h-9 text-xl leading-none text-black shadow" aria-label="Close">✕</button>
+
+        <img id="item-image" src="" alt="" class="w-full h-56 object-cover rounded-t-2xl" />
+
+        <div class="p-5">
+          <h3 id="item-name" class="text-2xl font-extrabold text-[#6B4430]"></h3>
+          <p id="item-price" class="text-xl font-bold text-[#2E9E78] mt-1"></p>
+
+          <div id="item-ingredients-wrap" class="mt-5 hidden">
+            <h4 class="font-bold text-[#6B4430] mb-2">
+              <span class="lang-en">Ingredients</span><span class="lang-am">ንጥረ ነገሮች</span>
+            </h4>
+            <div id="item-ingredients" class="flex flex-wrap gap-2"></div>
+          </div>
+
+          <div id="item-allergens-wrap" class="mt-5 hidden">
+            <h4 class="font-bold text-[#6B4430] mb-2">
+              <span class="lang-en">Allergens</span><span class="lang-am">አለርጂ ሊያስከትሉ የሚችሉ</span>
+            </h4>
+            <div id="item-allergens" class="flex flex-wrap gap-2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <main class="max-w-3xl mx-auto pb-12">
+      <!-- Language buttons -->
+      <div class="flex justify-center gap-3 py-3">
+        <button data-set-lang="en" class="bg-[#F5B800] text-[#6B4430] rounded-lg px-3 py-1 text-sm font-bold">English</button>
+        <button data-set-lang="am" class="bg-[#F5B800] text-[#6B4430] rounded-lg px-3 py-1 text-sm font-bold">Amharic</button>
+      </div>
+
+      <!-- Category cards -->
+      <div class="overflow-x-auto hide-scrollbar">
+        <div class="flex gap-3 px-4 pb-2 w-max">
+          {menuData.categories.map((category) => (
+            <a
+              href={`#${category.id}`}
+              class="w-44 shrink-0 bg-white rounded-2xl shadow-md overflow-hidden flex flex-col border-b-4 border-[#2E9E78]"
+            >
+              <img src={category.image} alt={category.name.en} class="w-full h-32 object-cover" />
+              <span class="px-2 py-4 text-center font-bold text-sm text-[#6B4430]">
+                <span class="lang-en">{category.name.en}</span>
+                <span class="lang-am">{category.name.am}</span>
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <!-- Menu sections -->
+      {categorizedItems.map((category) => (
+        <section id={category.id} class="mt-4 px-4 scroll-mt-24">
+          <h2 class="inline-block text-3xl font-extrabold text-[#2E9E78] mb-4 pb-1 border-b-4 border-[#F5B800]">
+            <span class="lang-en">{category.name.en}</span>
+            <span class="lang-am">{category.name.am}</span>
+          </h2>
+          <div class="space-y-4">
+            {category.items.map((item) => (
+              <article
+                  class="item-card flex bg-white rounded-xl shadow-md overflow-hidden h-[185px] cursor-pointer"
+                  data-item={JSON.stringify(item)}
+                >
+                <img src={item.image} alt={item.name.en} class="w-44 h-full object-cover shrink-0" />
+                <div class="flex flex-col justify-center px-5">
+                  <h3 class="text-2xl font-bold leading-tight text-[#6B4430]">
+                    <span class="lang-en">{item.name.en}</span>
+                    <span class="lang-am">{item.name.am}</span>
+                  </h3>
+                  <p class="text-xl font-bold mt-3 text-[#2E9E78]">{item.price} {menuData.currency}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      ))}
+    </main>
+
+        <!-- Footer -->
+    <footer class="bg-[#6B4430] text-white text-center py-10 px-4 border-t-4 border-[#2E9E78]">
+      <div class="flex justify-center gap-4">
+        <a href="#" aria-label="TikTok" class="w-12 h-12 rounded-full bg-white text-[#6B4430] flex items-center justify-center">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+        </a>
+        <a href="#" aria-label="Facebook" class="w-12 h-12 rounded-full bg-white text-[#6B4430] flex items-center justify-center">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </a>
+        <a href="#" aria-label="Instagram" class="w-12 h-12 rounded-full bg-white text-[#6B4430] flex items-center justify-center">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
+      </div>
+
+      <div class="mt-6 space-y-3 text-lg">
+        <p>{menuData.restaurant}</p>
+        <p>Hawassa</p>
+        <a href="tel:+251913226793/+251913929748" class="flex items-center justify-center gap-2">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.57a1 1 0 01-.25 1.02l-2.2 2.2z"/></svg>
+          +251 913 226 793/+251913929748
+        </a>
+        <p>
+          <span class="lang-en">Opening Hours: 07:00 AM - 9:00 PM</span>
+          <span class="lang-am">የስራ ሰዓት: ከ ጠዋቱ 01:00 እስከ ምሽቱ - 3:00 </span>
+        </p>
+      </div>
+
+      <p class="mt-8">
+        <span class="lang-en">Powered by</span><span class="lang-am">የተሰራው በ</span> FM Tech
+      </p>
+    </footer>
+
+    <script>
+      // ---------- Language ----------
+      const root = document.documentElement;
+      const select = document.getElementById('lang-select') as HTMLSelectElement;
+
+      function setLang(lang: string) {
+        root.dataset.lang = lang;
+        root.lang = lang;
+        select.value = lang;
+        localStorage.setItem('lang', lang);
+      }
+
+      document.querySelectorAll('[data-set-lang]').forEach((btn) => {
+        btn.addEventListener('click', () => setLang((btn as HTMLElement).dataset.setLang!));
+      });
+      select.addEventListener('change', () => setLang(select.value));
+      setLang(localStorage.getItem('lang') || 'en');
+
+      // ---------- Drawer ----------
+      const drawer = document.getElementById('drawer')!;
+      const overlay = document.getElementById('overlay')!;
+
+      function openMenu() {
+        drawer.classList.remove('-translate-x-full');
+        overlay.classList.remove('opacity-0', 'pointer-events-none');
+      }
+      function closeMenu() {
+        drawer.classList.add('-translate-x-full');
+        overlay.classList.add('opacity-0', 'pointer-events-none');
+      }
+
+      document.getElementById('open-menu')!.addEventListener('click', openMenu);
+      document.getElementById('close-menu')!.addEventListener('click', closeMenu);
+      document.getElementById('link-menu')!.addEventListener('click', (e) => {
+        e.preventDefault();
+        closeMenu();
+      });
+      overlay.addEventListener('click', closeMenu);
+
+      // ---------- Popups ----------
+      function openModal(id: string) {
+        const modal = document.getElementById(id)!;
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+      function closeAllModals() {
+        document.querySelectorAll('.modal').forEach((m) => {
+          m.classList.add('hidden');
+          m.classList.remove('flex');
+        });
+      }
+
+      document.getElementById('open-contact')!.addEventListener('click', () => {
+        closeMenu();
+        openModal('contact-modal');
+      });
+      document.getElementById('open-feedback')!.addEventListener('click', () => {
+        closeMenu();
+        openModal('feedback-modal');
+      });
+
+      document.querySelectorAll('[data-close-modal]').forEach((btn) => {
+        btn.addEventListener('click', closeAllModals);
+      });
+      document.querySelectorAll('.modal').forEach((modal) => {
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) closeAllModals();
+        });
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeAllModals();
+          closeMenu();
+        }
+      });
+
+      // ---------- Feedback -> WhatsApp ----------
+      document.getElementById('send-feedback')!.addEventListener('click', () => {
+        const box = document.getElementById('feedback-text') as HTMLTextAreaElement;
+        const text = box.value.trim();
+        if (!text) {
+          box.focus();
+          return;
+        }
+        window.open('https://wa.me/251913226793?text=' + encodeURIComponent(text), '_blank');
+        box.value = '';
+        closeAllModals();
+      });
+
+      // ---------- Item details ----------
+      function fillList(listId: string, wrapId: string, values: string[] | undefined, isAllergen: boolean) {
+        const list = document.getElementById(listId)!;
+        const wrap = document.getElementById(wrapId)!;
+        list.innerHTML = '';
+
+        if (!values || values.length === 0) {
+          wrap.classList.add('hidden');
+          return;
+        }
+
+        values.forEach((value) => {
+          const chip = document.createElement('span');
+          chip.textContent = value;
+          chip.className = isAllergen
+            ? 'bg-red-100 text-red-700 font-semibold rounded-full px-3 py-1 text-sm'
+            : 'bg-[#F5B800]/20 text-[#6B4430] font-semibold rounded-full px-3 py-1 text-sm';
+          list.appendChild(chip);
+        });
+        wrap.classList.remove('hidden');
+      }
+
+      document.querySelectorAll('.item-card').forEach((card) => {
+        card.addEventListener('click', () => {
+          const item = JSON.parse((card as HTMLElement).dataset.item!);
+
+          const img = document.getElementById('item-image') as HTMLImageElement;
+          img.src = item.image;
+          img.alt = item.name.en;
+
+          document.getElementById('item-name')!.innerHTML =
+            `<span class="lang-en">${item.name.en}</span><span class="lang-am">${item.name.am}</span>`;
+          document.getElementById('item-price')!.textContent = `${item.price} ETB`;
+
+          fillList('item-ingredients', 'item-ingredients-wrap', item.ingredients, false);
+          fillList('item-allergens', 'item-allergens-wrap', item.allergens, true);
+
+          openModal('item-modal');
+        });
+      });
+    </script>
+
+    <style is:global>
+      button, a, select, [role='button'] { cursor: pointer; }
+
+      .hide-scrollbar { scrollbar-width: thin; scrollbar-color: #2E9E78 #E9E1D6; padding-bottom: 8px; }
+      .hide-scrollbar::-webkit-scrollbar { height: 8px; }
+      .hide-scrollbar::-webkit-scrollbar-track { background: #E9E1D6; border-radius: 9999px; }
+      .hide-scrollbar::-webkit-scrollbar-thumb { background: #2E9E78; border-radius: 9999px; }
+
+      html[data-lang='en'] .lang-am { display: none; }
+      html[data-lang='am'] .lang-en { display: none; }
+    </style>
+  </body>
+</html>

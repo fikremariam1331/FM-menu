@@ -1,0 +1,112 @@
+{
+  "restaurant": "FM Juice, Salad & Burger",
+  "currency": "ETB",
+  "categories": [
+    { "id": "breakfast-sandwich", "name": { "en": "Breakfast & Sandwich", "am": "ቁርስ እና ሳንድዊች" }, "image": "/images/Avocado Toast.jpg" },
+    { "id": "eggs-omelettes", "name": { "en": "Eggs & Omelettes", "am": "እንቁላል እና ኦምሌት" }, "image": "/images/Omelet.jpg" },
+    { "id": "burger", "name": { "en": "Burger", "am": "በርገር" }, "image": "/images/Burger.jpg" },
+    { "id": "waffles-pancake-oats", "name": { "en": "Waffles, Pancake & Oats", "am": "Waffles, Pancake & Oats" }, "image": "/images/Waffle with Crispy Chicken.jpg" },
+    { "id": "mini-pancake-waffle", "name": { "en": "Mini Pancake & Waffle", "am": "Mini Pancake & Waffle" }, "image": "/images/Pancake.jpg" },
+    { "id": "healthy-smoothies", "name": { "en": "Healthy Smoothies", "am": "Healthy Smoothies" }, "image": "/images/Peanut Butter Protien.jpg" },
+    { "id": "bubble-tea", "name": { "en": "Bubble Tea", "am": "Bubble Tea" }, "image": "/images/Bubble Tea.JPG" },
+    { "id": "hot-drink-non-coffee", "name": { "en": "Hot Drink - Non Coffee", "am": "Hot Drink - Non Coffee" }, "image": "/images/Matcha.JPG" },
+    { "id": "frappuccino", "name": { "en": "Frappuccino", "am": "Frappuccino" }, "image": "/images/Frappuccino.JPG" },
+    { "id": "ice-coffee", "name": { "en": "Ice Coffee", "am": "Ice Coffee" }, "image": "/images/Ice Coffee.JPG" },
+    { "id": "hot-coffee", "name": { "en": "Hot Coffee", "am": "Hot Coffee" }, "image": "/images/Hot CoFFEE.PNG" },
+    { "id": "milkshake", "name": { "en": "MilkShake", "am": "MilkShake" }, "image": "/images/MilkShake.JPG" }
+  ],
+  "items": [
+    {
+  "id": "1",
+  "categoryId": "breakfast-sandwich",
+  "name": { "en": "Quesadilla", "am": "ኩሳዲያ" },
+  "price": 1100,
+  "image": "/images/img/quesadilla.jpg",
+  "ingredients": ["Tortilla", "Chicken", "Cheese", "Bell pepper"],
+  "allergens": ["Gluten", "Milk"]
+},
+    { "id": "2", "categoryId": "breakfast-sandwich", "name": { "en": "Chicken Wraps", "am": "ቺክን ራፕ" }, "price": 960, "image": "/images/img/chicken  wrap.jpg", "ingredients": ["Tortilla", "Grilled chicken", "Lettuce", "Sauce"], "allergens": ["Gluten"] },
+
+    { "id": "3", "categoryId": "breakfast-sandwich", "name": { "en": "Tuna Wrap", "am": "ቱና ራፕ" }, "price": 800, "image": "/images/img/tuna wrap.jpg", "ingredients": ["Tortilla", "Tuna", "Lettuce", "Mayonnaise"], "allergens": ["Gluten", "Fish", "Egg"] },
+
+    { "id": "4", "categoryId": "breakfast-sandwich", "name": { "en": "Vegetable Wrap", "am": "Vegetable Wrap" }, "price": 400, "image": "/images/img/vegetable wrap.jpg", "ingredients": ["Tortilla", "Lettuce", "Tomato", "Cucumber", "Carrot", "Sauce"], "allergens": ["Gluten"] },
+
+     { "id": "5", "categoryId": "breakfast-sandwich", "name": { "en": "Avocado Toast with Guacamole", "am": "Avocado Toast with Guacamole" }, "price": 730, "image": "/images/img/avocado toast with guacamole.jpg", "ingredients": ["Toasted bread", "Avocado", "Tomato", "Onion", "Lime", "Olive oil"], "allergens": ["Gluten"] },
+    { "id": "6", "categoryId": "breakfast-sandwich", "name": { "en": "Croissant Sandwich", "am": "Croissant Sandwich" }, "price": 800, "image": "/images/img/croissant sandwich.jpg", "ingredients": ["Croissant", "Egg", "Cheese", "Lettuce", "Tomato"], "allergens": ["Gluten", "Milk", "Egg"] },
+    { "id": "7", "categoryId": "breakfast-sandwich", "name": { "en": "Egg Sandwich", "am": "Egg Sandwich" }, "price": 670, "image": "/images/img/egg sandwich..jpg", "ingredients": ["Bread", "Egg", "Lettuce", "Tomato", "Sauce"], "allergens": ["Gluten", "Egg"] },
+    { "id": "8", "categoryId": "breakfast-sandwich", "name": { "en": "Philly Cheese Steak Sandwich", "am": "Philly Cheese Steak Sandwich" }, "price": 1250, "image": "/images/img/philly cheese steak sandwich.jpg", "ingredients": ["Bread roll", "Beef steak", "Cheese", "Onion", "Bell pepper"], "allergens": ["Gluten", "Milk"] },
+    { "id": "9", "categoryId": "breakfast-sandwich", "name": { "en": "Vegetable Sandwich", "am": "Vegetable Sandwich" }, "price": 430, "image": "/images/img/Vegetable sandwich boon.jpg", "ingredients": ["Bread", "Lettuce", "Tomato", "Cucumber", "Carrot", "Sauce"], "allergens": ["Gluten"] },
+
+    { "id": "10", "categoryId": "eggs-omelettes", "name": { "en": "Omelette", "am": "Omelette" }, "price": 890, "image": "/images/img/omelet..jpg", "ingredients": ["Eggs", "Onion", "Tomato", "Bell pepper", "Butter"], "allergens": ["Egg", "Milk"] },
+    { "id": "11", "categoryId": "eggs-omelettes", "name": { "en": "Spanish Omelette", "am": "Spanish Omelette" }, "price": 930, "image": "/images/img/spanish omelete.webp", "ingredients": ["Eggs", "Potato", "Onion", "Olive oil"], "allergens": ["Egg"] },
+    { "id": "12", "categoryId": "eggs-omelettes", "name": { "en": "Fried Eggs", "am": "Fried Eggs" }, "price": 890, "image": "/images/img/fried egg.jpg", "ingredients": ["Eggs", "Butter"], "allergens": ["Egg", "Milk"] },
+    { "id": "13", "categoryId": "eggs-omelettes", "name": { "en": "Ful Madames", "am": "Ful Madames" }, "price": 580, "image": "/images/img/ful madams.jpg", "ingredients": ["Fava beans", "Egg", "Onion", "Tomato", "Bread"], "allergens": ["Egg", "Gluten"] },
+
+    { "id": "14", "categoryId": "burger", "name": { "en": "FM Burger", "am": "FM Burger" }, "price": 920, "image": "/images/img/boon burger.jpg", "ingredients": ["Beef patty", "Burger bun", "Cheese", "Lettuce", "Tomato", "Sauce"], "allergens": ["Gluten", "Milk", "Egg"] },
+    { "id": "15", "categoryId": "burger", "name": { "en": "Crispy Chicken Burger", "am": "Crispy Chicken Burger" }, "price": 999, "image": "/images/img/chrispy chicken burger.jpg", "ingredients": ["Crispy chicken", "Burger bun", "Lettuce", "Mayonnaise"], "allergens": ["Gluten", "Egg", "Milk"] },
+    { "id": "16", "categoryId": "burger", "name": { "en": "Cheese Burger", "am": "Cheese Burger" }, "price": 800, "image": "/images/img/cheese burger..jpg", "ingredients": ["Beef patty", "Burger bun", "Cheese", "Lettuce", "Tomato"], "allergens": ["Gluten", "Milk"] },
+    { "id": "17", "categoryId": "burger", "name": { "en": "Beef Burger", "am": "Beef Burger" }, "price": 700, "image": "/images/img/beef burger..jpg", "ingredients": ["Beef patty", "Burger bun", "Lettuce", "Tomato", "Onion"], "allergens": ["Gluten"] },
+
+    { "id": "18", "categoryId": "waffles-pancake-oats", "name": { "en": "Granola Oats Meal", "am": "Granola Oats Meal" }, "price": 900, "image": "/images/img/granola oats meal.jpg", "ingredients": ["Oats", "Granola", "Milk", "Honey", "Fresh fruit"], "allergens": ["Gluten", "Milk", "Tree nuts"] },
+    { "id": "19", "categoryId": "waffles-pancake-oats", "name": { "en": "Waffle with Crispy Chicken", "am": "Waffle with Crispy Chicken" }, "price": 1300, "image": "/images/img/waffle with crispy chiken.jpg", "ingredients": ["Waffle", "Crispy chicken", "Syrup", "Butter"], "allergens": ["Gluten", "Egg", "Milk"] },
+    { "id": "20", "categoryId": "waffles-pancake-oats", "name": { "en": "Waffle", "am": "Waffle" }, "price": 720, "image": "/images/img/waffle.jpg", "ingredients": ["Waffle batter", "Butter", "Syrup"], "allergens": ["Gluten", "Egg", "Milk"] },
+    { "id": "21", "categoryId": "waffles-pancake-oats", "name": { "en": "French Toast", "am": "French Toast" }, "price": 720, "image": "/images/img/french toast.jpg", "ingredients": ["Bread", "Eggs", "Milk", "Cinnamon", "Syrup"], "allergens": ["Gluten", "Egg", "Milk"] },
+    { "id": "22", "categoryId": "waffles-pancake-oats", "name": { "en": "Pancake", "am": "Pancake" }, "price": 680, "image": "/images/img/pancake..jpg", "ingredients": ["Pancake batter", "Butter", "Syrup"], "allergens": ["Gluten", "Egg", "Milk"] },
+
+    { "id": "23", "categoryId": "mini-pancake-waffle", "name": { "en": "FM Mini Pancake", "am": "FM Mini Pancake" }, "price": 600, "image": "/images/img/mini pancake.webp", "ingredients": ["Mini pancakes", "Butter", "Syrup"], "allergens": ["Gluten", "Egg", "Milk"] },
+    { "id": "24", "categoryId": "mini-pancake-waffle", "name": { "en": "Nutella Mini Pancake", "am": "Nutella Mini Pancake" }, "price": 490, "image": "/images/img/nutella mini pncake.webp", "ingredients": ["Mini pancakes", "Nutella"], "allergens": ["Gluten", "Egg", "Milk", "Tree nuts", "Soy"] },
+    { "id": "25", "categoryId": "mini-pancake-waffle", "name": { "en": "FM Waffle", "am": "FM Waffle" }, "price": 600, "image": "/images/img/waffle.jpg", "ingredients": ["Waffle", "Butter", "Syrup"], "allergens": ["Gluten", "Egg", "Milk"] },
+    { "id": "26", "categoryId": "mini-pancake-waffle", "name": { "en": "Nutella Waffle", "am": "Nutella Waffle" }, "price": 490, "image": "/images/img/nutella waffle.webp", "ingredients": ["Waffle", "Nutella"], "allergens": ["Gluten", "Egg", "Milk", "Tree nuts", "Soy"] },
+    { "id": "27", "categoryId": "mini-pancake-waffle", "name": { "en": "Fruit Nutella Special", "am": "Fruit Nutella Special" }, "price": 490, "image": "/images/img/fruit nutella special waffle.jpg", "ingredients": ["Waffle", "Nutella", "Fresh fruit"], "allergens": ["Gluten", "Egg", "Milk", "Tree nuts", "Soy"] },
+
+    { "id": "28", "categoryId": "healthy-smoothies", "name": { "en": "Avocado Energy", "am": "Avocado Energy" }, "price": 680, "image": "/images/img/Avocado energy.jpg", "ingredients": ["Avocado", "Banana", "Milk", "Honey"], "allergens": ["Milk"] },
+    { "id": "29", "categoryId": "healthy-smoothies", "name": { "en": "Strawberry Banana", "am": "Strawberry Banana" }, "price": 690, "image": "/images/img/Strawberry Banana.jpg", "ingredients": ["Strawberry", "Banana", "Milk"], "allergens": ["Milk"] },
+    { "id": "30", "categoryId": "healthy-smoothies", "name": { "en": "Mango Willness", "am": "Mango Willness" }, "price": 690, "image": "/images/img/Mango willness.jpg", "ingredients": ["Mango", "Banana", "Milk"], "allergens": ["Milk"] },
+    { "id": "31", "categoryId": "healthy-smoothies", "name": { "en": "Tropical Green", "am": "Tropical Green" }, "price": 690, "image": "/images/img/Tropical Green.jpg", "ingredients": ["Spinach", "Pineapple", "Banana", "Mango"] },
+    { "id": "32", "categoryId": "healthy-smoothies", "name": { "en": "Peanut Protein Butter", "am": "Peanut Protein Butter" }, "price": 690, "image": "/images/img/Peanut Butter Protien.jpg", "ingredients": ["Peanut butter", "Banana", "Milk", "Protein powder"], "allergens": ["Peanuts", "Milk"] },
+    { "id": "33", "categoryId": "healthy-smoothies", "name": { "en": "Watermelon Refresh", "am": "Watermelon Refresh" }, "price": 650, "image": "/images/img/Watermelon refresh.jpg", "ingredients": ["Watermelon", "Mint", "Lime"] },
+
+    { "id": "34", "categoryId": "bubble-tea", "name": { "en": "Classic Milk Tea", "am": "Classic Milk Tea" }, "price": 500, "image": "/images/img/classic milk tea.webp", "ingredients": ["Black tea", "Milk", "Sugar", "Tapioca pearls"], "allergens": ["Milk"] },
+    { "id": "35", "categoryId": "bubble-tea", "name": { "en": "Brown Sugar Boba", "am": "Brown Sugar Boba" }, "price": 590, "image": "/images/img/brown sugar boba.jpg", "ingredients": ["Milk", "Brown sugar syrup", "Tapioca pearls"], "allergens": ["Milk"] },
+    { "id": "36", "categoryId": "bubble-tea", "name": { "en": "Taro", "am": "Taro" }, "price": 590, "image": "/images/lo-bg.png", "ingredients": ["Taro", "Milk", "Tapioca pearls"], "allergens": ["Milk"] },
+    { "id": "37", "categoryId": "bubble-tea", "name": { "en": "Blueberry Bubble Tea", "am": "Blueberry Bubble Tea" }, "price": 590, "image": "/images/img/blueberry bubble tea.webp", "ingredients": ["Tea", "Blueberry syrup", "Tapioca pearls"] },
+    { "id": "38", "categoryId": "bubble-tea", "name": { "en": "Strawberry Bubble Tea", "am": "Strawberry Bubble Tea" }, "price": 590, "image": "/images/img/strawberry bubble tea.webp", "ingredients": ["Tea", "Strawberry syrup", "Tapioca pearls"] },
+    { "id": "39", "categoryId": "bubble-tea", "name": { "en": "Matcha Bubble Tea", "am": "Matcha Bubble Tea" }, "price": 590, "image": "/images/img/matcha bubble tea.webp", "ingredients": ["Matcha powder", "Milk", "Tapioca pearls"], "allergens": ["Milk"] },
+    { "id": "40", "categoryId": "bubble-tea", "name": { "en": "Mango Bubble Tea", "am": "Mango Bubble Tea" }, "price": 590, "image": "/images/img/mango bubble tea.webp", "ingredients": ["Tea", "Mango syrup", "Tapioca pearls"] },
+
+    { "id": "41", "categoryId": "hot-drink-non-coffee", "name": { "en": "Hot Chocolate", "am": "Hot Chocolate" }, "price": 400, "image": "/images/img/hot chocolate.webp", "ingredients": ["Chocolate", "Milk", "Sugar"], "allergens": ["Milk"] },
+    { "id": "42", "categoryId": "hot-drink-non-coffee", "name": { "en": "Nirvana", "am": "Nirvana" }, "price": 400, "image": "/images/lo-bg.png" },
+    { "id": "43", "categoryId": "hot-drink-non-coffee", "name": { "en": "Matcha", "am": "Matcha" }, "price": 400, "image": "/images/img/matcha...webp", "ingredients": ["Matcha powder", "Milk"], "allergens": ["Milk"] },
+    { "id": "44", "categoryId": "hot-drink-non-coffee", "name": { "en": "Red Velvet", "am": "Red Velvet" }, "price": 400, "image": "/images/img/red velvet.webp", "ingredients": ["Red velvet syrup", "Milk"], "allergens": ["Milk"] },
+
+    { "id": "45", "categoryId": "frappuccino", "name": { "en": "Caramel Frappuccino", "am": "Caramel Frappuccino" }, "price": 550, "image": "/images/img/caramel frappuccino.webp", "ingredients": ["Coffee", "Milk", "Ice", "Caramel syrup", "Whipped cream"], "allergens": ["Milk"] },
+    { "id": "46", "categoryId": "frappuccino", "name": { "en": "Mocha Frappuccino", "am": "Mocha Frappuccino" }, "price": 550, "image": "/images/img/mocha frappuccino.webp", "ingredients": ["Coffee", "Milk", "Ice", "Chocolate sauce", "Whipped cream"], "allergens": ["Milk"] },
+    { "id": "47", "categoryId": "frappuccino", "name": { "en": "Coffee Frappuccino", "am": "Coffee Frappuccino" }, "price": 550, "image": "/images/img/coffee frappuccino.webp", "ingredients": ["Coffee", "Milk", "Ice", "Whipped cream"], "allergens": ["Milk"] },
+    { "id": "48", "categoryId": "frappuccino", "name": { "en": "Strawberry Frappuccino", "am": "Strawberry Frappuccino" }, "price": 550, "image": "/images/img/strawberry frappuccino.webp", "ingredients": ["Strawberry", "Milk", "Ice", "Whipped cream"], "allergens": ["Milk"] },
+    { "id": "49", "categoryId": "frappuccino", "name": { "en": "Cookies & Cream Frappuccino", "am": "Cookies & Cream Frappuccino" }, "price": 580, "image": "/images/img/cookies and cream frappuccino.webp", "ingredients": ["Milk", "Ice", "Chocolate cookies", "Whipped cream"], "allergens": ["Gluten", "Milk", "Soy"] },
+    { "id": "50", "categoryId": "frappuccino", "name": { "en": "Red Velvet Frappuccino", "am": "Red Velvet Frappuccino" }, "price": 580, "image": "/images/img/Red velvet frappuccino.webp", "ingredients": ["Red velvet syrup", "Milk", "Ice", "Whipped cream"], "allergens": ["Milk"] },
+    { "id": "51", "categoryId": "frappuccino", "name": { "en": "Matcha Frappuccino", "am": "Matcha Frappuccino" }, "price": 580, "image": "/images/img/matcha frappuccino.webp", "ingredients": ["Matcha powder", "Milk", "Ice", "Whipped cream"], "allergens": ["Milk"] },
+    { "id": "52", "categoryId": "frappuccino", "name": { "en": "Vanilla Frappuccino", "am": "Vanilla Frappuccino" }, "price": 580, "image": "/images/img/Vanilla Frappuccino.jpg", "ingredients": ["Vanilla syrup", "Milk", "Ice", "Whipped cream"], "allergens": ["Milk"] },
+    { "id": "53", "categoryId": "frappuccino", "name": { "en": "Taro Frappuccino", "am": "Taro Frappuccino" }, "price": 580, "image": "/images/img/taro frappuccino.webp", "ingredients": ["Taro", "Milk", "Ice", "Whipped cream"], "allergens": ["Milk"] },
+
+    { "id": "54", "categoryId": "ice-coffee", "name": { "en": "Matcha Ice Latte", "am": "Matcha Ice Latte" }, "price": 500, "image": "/images/img/matcha iced drink.webp", "ingredients": ["Matcha powder", "Milk", "Ice"], "allergens": ["Milk"] },
+    { "id": "55", "categoryId": "ice-coffee", "name": { "en": "Ice Shaken Espresso", "am": "Ice Shaken Espresso" }, "price": 500, "image": "/images/img/Ice shaken espresso.webp", "ingredients": ["Espresso", "Ice", "Sugar syrup"] },
+    { "id": "56", "categoryId": "ice-coffee", "name": { "en": "Ice Caramel Macchiato", "am": "Ice Caramel Macchiato" }, "price": 500, "image": "/images/img/ice caramel macchiato.webp", "ingredients": ["Espresso", "Milk", "Vanilla syrup", "Caramel sauce", "Ice"], "allergens": ["Milk"] },
+    { "id": "57", "categoryId": "ice-coffee", "name": { "en": "Ice Latte", "am": "Ice Latte" }, "price": 260, "image": "/images/img/ice latte.webp", "ingredients": ["Espresso", "Milk", "Ice"], "allergens": ["Milk"] },
+
+    { "id": "58", "categoryId": "hot-coffee", "name": { "en": "Latte", "am": "Latte" }, "price": 260, "image": "/images/img/latte.webp", "ingredients": ["Espresso", "Steamed milk"], "allergens": ["Milk"] },
+    { "id": "59", "categoryId": "hot-coffee", "name": { "en": "Cappuccino", "am": "Cappuccino" }, "price": 270, "image": "/images/img/cappuccino.webp", "ingredients": ["Espresso", "Steamed milk", "Milk foam"], "allergens": ["Milk"] },
+    { "id": "60", "categoryId": "hot-coffee", "name": { "en": "Espresso", "am": "Espresso" }, "price": 160, "image": "/images/img/espresso.webp", "ingredients": ["Espresso"] },
+    { "id": "61", "categoryId": "hot-coffee", "name": { "en": "Mocha", "am": "Mocha" }, "price": 320, "image": "/images/img/mocha.webp", "ingredients": ["Espresso", "Steamed milk", "Chocolate sauce"], "allergens": ["Milk"] },
+    { "id": "62", "categoryId": "hot-coffee", "name": { "en": "Caramel Macchiato", "am": "Caramel Macchiato" }, "price": 350, "image": "/images/img/caramel macchiato.webp", "ingredients": ["Espresso", "Steamed milk", "Vanilla syrup", "Caramel sauce"], "allergens": ["Milk"] },
+    { "id": "63", "categoryId": "hot-coffee", "name": { "en": "Fasting Macchiato", "am": "Fasting Macchiato" }, "price": 280, "image": "/images/img/fasting macchiato.jpg" },
+    { "id": "64", "categoryId": "hot-coffee", "name": { "en": "Macchiato", "am": "Macchiato" }, "price": 170, "image": "/images/img/macchiato.webp", "ingredients": ["Espresso", "Milk foam"], "allergens": ["Milk"] },
+
+    { "id": "65", "categoryId": "milkshake", "name": { "en": "Nutella Milkshake", "am": "Nutella Milkshake" }, "price": 580, "image": "/images/img/nutella milkshake.webp", "ingredients": ["Milk", "Ice cream", "Nutella"], "allergens": ["Milk", "Tree nuts", "Soy"] },
+    { "id": "66", "categoryId": "milkshake", "name": { "en": "Chocolate Milkshake", "am": "Chocolate Milkshake" }, "price": 580, "image": "/images/img/chocolate milkshake.webp", "ingredients": ["Milk", "Ice cream", "Chocolate sauce"], "allergens": ["Milk"] },
+    { "id": "67", "categoryId": "milkshake", "name": { "en": "Vanilla", "am": "Vanilla" }, "price": 580, "image": "/images/img/vanilla milkshake.webp", "ingredients": ["Milk", "Vanilla ice cream"], "allergens": ["Milk"] },
+    { "id": "68", "categoryId": "milkshake", "name": { "en": "Strawberry Milkshake", "am": "Strawberry Milkshake" }, "price": 550, "image": "/images/img/strawberry milkshake.webp", "ingredients": ["Milk", "Ice cream", "Strawberry"], "allergens": ["Milk"] },
+    { "id": "69", "categoryId": "milkshake", "name": { "en": "Oreo (Cookies & Cream)", "am": "Oreo (Cookies & Cream)" }, "price": 580, "image": "/images/img/oreo milkshake.webp", "ingredients": ["Milk", "Ice cream", "Chocolate cookies"], "allergens": ["Gluten", "Milk", "Soy"] },
+    { "id": "70", "categoryId": "milkshake", "name": { "en": "Matcha Strawberry Milkshake", "am": "Matcha Strawberry Milkshake" }, "price": 600, "image": "/images/img/strawberry matcha milkshake.jpg", "ingredients": ["Milk", "Ice cream", "Matcha powder", "Strawberry"], "allergens": ["Milk"] }
+  ]
+}
