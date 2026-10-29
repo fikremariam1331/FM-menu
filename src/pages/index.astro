@@ -42,8 +42,11 @@ const getImgUrl = (path) => {
 
     <!-- Side drawer -->
     <aside id="drawer" class="fixed top-0 left-0 h-full w-72 max-w-[80%] bg-white z-[70] shadow-xl -translate-x-full transition-transform duration-300 flex flex-col">
+      
       <div class="relative flex justify-center pt-6 pb-4 px-4">
-        <img src="/images/fm_logo.png" alt={menuData.restaurant} class="h-24 w-auto max-w-[180px] object-contain" />
+
+        <img src={getImgUrl('/images/fm_logo.png')} alt={menuData.restaurant} class="h-24 w-auto max-w-[180px] object-contain" />
+        
         <button id="close-menu" class="absolute top-4 right-4 text-3xl leading-none text-black" aria-label="Close menu">✕</button>
       </div>
 
