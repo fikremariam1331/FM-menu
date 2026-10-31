@@ -1,0 +1,311 @@
+---
+import '../styles/global.css';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Orders</title>
+  </head>
+  <body class="bg-[#FBF8F3] text-[#6B4430] font-sans antialiased min-h-screen">
+    <!-- Login -->
+    <section id="login" class="max-w-sm mx-auto mt-20 px-4">
+      <div class="bg-white rounded-2xl shadow-md p-6 border-b-4 border-[#2E9E78]">
+        <h1 class="text-2xl font-extrabold mb-4">Orders Login</h1>
+        <label class="block font-bold mb-1" for="login-email">Email</label>
+        <input id="login-email" type="email" class="w-full border-2 border-[#6B4430]/30 rounded-lg p-3 mb-4 focus:outline-none focus:border-[#2E9E78]" />
+        <label class="block font-bold mb-1" for="login-password">Password</label>
+        <input id="login-password" type="password" class="w-full border-2 border-[#6B4430]/30 rounded-lg p-3 mb-3 focus:outline-none focus:border-[#2E9E78]" />
+        <p id="login-error" class="hidden text-red-600 text-sm font-semibold mb-2"></p>
+        <button id="login-btn" type="button" class="w-full bg-[#2E9E78] text-white font-bold rounded-lg py-3 text-lg">Sign in</button>
+      </div>
+    </section>
+
+    <!-- Dashboard -->
+    <section id="dashboard" class="hidden">
+      <header class="sticky top-0 z-10 bg-[#6B4430] border-b-4 border-[#2E9E78]">
+        <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
+          <h1 class="text-[#F5B800] text-xl font-extrabold">Orders</h1>
+          <button id="logout-btn" type="button" class="bg-white text-[#6B4430] font-bold rounded-lg px-3 py-2 text-sm">Sign out</button>
+        </div>
+      </header>
+
+      <main class="max-w-3xl mx-auto px-4 py-4">
+        <p id="permission-error" class="hidden bg-red-100 text-red-700 font-semibold rounded-lg p-3 mb-4">
+          This account is not allowed to view orders.
+        </p>
+
+        <div class="grid grid-cols-3 gap-3 mb-4">
+          <div class="bg-white rounded-xl shadow-md p-3 text-center border-b-4 border-[#2E9E78]">
+            <p class="text-xs font-bold">Today's sales</p>
+            <p class="text-xl font-extrabold text-[#2E9E78]"><span id="stat-sales">0</span> ETB</p>
+          </div>
+          <div class="bg-white rounded-xl shadow-md p-3 text-center border-b-4 border-[#2E9E78]">
+            <p class="text-xs font-bold">Paid today</p>
+            <p id="stat-paid" class="text-xl font-extrabold">0</p>
+          </div>
+          <div class="bg-white rounded-xl shadow-md p-3 text-center border-b-4 border-[#F5B800]">
+            <p class="text-xs font-bold">Open orders</p>
+            <p id="stat-open" class="text-xl font-extrabold">0</p>
+          </div>
+        </div>
+
+        <div class="flex gap-2 mb-4 overflow-x-auto">
+          <button type="button" data-filter="active" class="rounded-lg px-3 py-2 text-sm font-bold bg-[#6B4430] text-white">Active</button>
+          <button type="button" data-filter="paid" class="rounded-lg px-3 py-2 text-sm font-bold bg-white text-[#6B4430]">Paid today</button>
+          <button type="button" data-filter="cancelled" class="rounded-lg px-3 py-2 text-sm font-bold bg-white text-[#6B4430]">Cancelled</button>
+          <button type="button" data-filter="all" class="rounded-lg px-3 py-2 text-sm font-bold bg-white text-[#6B4430]">All</button>
+        </div>
+
+        <div id="orders-list" class="space-y-4"></div>
+        <p id="empty" class="hidden text-center text-gray-500 py-10">No orders here yet.</p>
+      </main>
+    </section>
+
+    <script>
+      import { db } from '../lib/firebase';
+      import { getApp } from 'firebase/app';
+      import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
+      import { collection, query, orderBy, limit, onSnapshot, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
+
+      type Line = { name: string; qty: number; price: number };
+      type Order = {
+        id: string;
+        customer: string;
+        phone: string;
+        items: Line[];
+        total: number;
+        status: string;
+        createdAt: any;
+        paidAt: any;
+      };
+
+      const auth = getAuth(getApp());
+      const $ = (id: string) => document.getElementById(id) as HTMLElement;
+
+      let orders: Order[] = [];
+      let filter = 'active';
+      let unsubscribe: (() => void) | null = null;
+      let firstLoad = true;
+
+      const toDate = (t: any): Date | null => (t && typeof t.toDate === 'function' ? t.toDate() : null);
+      const isToday = (d: Date | null) => !!d && d.toDateString() === new Date().toDateString();
+      const fmt = (d: Date | null) =>
+        d ? d.toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '...';
+
+      function beep() {
+        try {
+          const Ctx = (window as any).AudioContext || (window as any).webkitAudioContext;
+          const ctx = new Ctx();
+          const osc = ctx.createOscillator();
+          osc.frequency.value = 880;
+          osc.connect(ctx.destination);
+          osc.start();
+          setTimeout(() => {
+            osc.stop();
+            ctx.close();
+          }, 300);
+        } catch (e) {}
+      }
+
+      // ---------- Login ----------
+      async function doLogin() {
+        const email = (document.getElementById('login-email') as HTMLInputElement).value.trim();
+        const password = (document.getElementById('login-password') as HTMLInputElement).value;
+        const err = $('login-error');
+        err.classList.add('hidden');
+        try {
+          await signInWithEmailAndPassword(auth, email, password);
+        } catch (e) {
+          err.textContent = 'Wrong email or password.';
+          err.classList.remove('hidden');
+        }
+      }
+      $('login-btn').addEventListener('click', doLogin);
+      $('login-password').addEventListener('keydown', (e) => {
+        if ((e as KeyboardEvent).key === 'Enter') doLogin();
+      });
+      $('logout-btn').addEventListener('click', () => signOut(auth));
+
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          $('login').classList.add('hidden');
+          $('dashboard').classList.remove('hidden');
+          startListening();
+        } else {
+          if (unsubscribe) {
+            unsubscribe();
+            unsubscribe = null;
+          }
+          orders = [];
+          firstLoad = true;
+          $('dashboard').classList.add('hidden');
+          $('login').classList.remove('hidden');
+        }
+      });
+
+      // ---------- Live orders ----------
+      function startListening() {
+        if (unsubscribe) return;
+        const q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'), limit(300));
+        unsubscribe = onSnapshot(
+          q,
+          (snap) => {
+            if (!firstLoad && snap.docChanges().some((c) => c.type === 'added' && !c.doc.metadata.hasPendingWrites)) {
+              beep();
+            }
+            firstLoad = false;
+            orders = snap.docs.map((d) => ({ id: d.id, ...(d.data() as any) }));
+            render();
+          },
+          () => {
+            $('permission-error').classList.remove('hidden');
+          }
+        );
+      }
+
+      async function setStatus(id: string, status: string) {
+        try {
+          await updateDoc(doc(db, 'orders', id), {
+            status: status,
+            paidAt: status === 'Paid' ? serverTimestamp() : null,
+          });
+        } catch (e) {
+          alert('Could not update the order. Please check your connection.');
+        }
+      }
+
+      // ---------- Filters ----------
+      document.querySelectorAll<HTMLElement>('[data-filter]').forEach((b) => {
+        b.addEventListener('click', () => {
+          filter = b.dataset.filter || 'active';
+          document.querySelectorAll<HTMLElement>('[data-filter]').forEach((x) => {
+            const on = x === b;
+            x.classList.toggle('bg-[#6B4430]', on);
+            x.classList.toggle('text-white', on);
+            x.classList.toggle('bg-white', !on);
+            x.classList.toggle('text-[#6B4430]', !on);
+          });
+          render();
+        });
+      });
+
+      // ---------- Display ----------
+      const badge: Record<string, string> = {
+        New: 'bg-[#F5B800] text-[#6B4430]',
+        Ready: 'bg-blue-100 text-blue-800',
+        Paid: 'bg-[#2E9E78] text-white',
+        Cancelled: 'bg-gray-200 text-gray-600',
+      };
+
+      function makeButton(label: string, cls: string, onClick: () => void) {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = label;
+        b.className = 'rounded-lg px-4 py-2 font-bold text-sm ' + cls;
+        b.addEventListener('click', onClick);
+        return b;
+      }
+
+      function render() {
+        const paidToday = orders.filter((o) => o.status === 'Paid' && isToday(toDate(o.paidAt)));
+        $('stat-sales').textContent = String(paidToday.reduce((s, o) => s + o.total, 0));
+        $('stat-paid').textContent = String(paidToday.length);
+        $('stat-open').textContent = String(orders.filter((o) => o.status === 'New' || o.status === 'Ready').length);
+
+        const shown = orders.filter((o) => {
+          if (filter === 'active') return o.status === 'New' || o.status === 'Ready';
+          if (filter === 'paid') return o.status === 'Paid' && isToday(toDate(o.paidAt));
+          if (filter === 'cancelled') return o.status === 'Cancelled';
+          return true;
+        });
+
+        const list = $('orders-list');
+        list.innerHTML = '';
+        $('empty').classList.toggle('hidden', shown.length > 0);
+
+        shown.forEach((o) => {
+          const items = o.items || [];
+          const card = document.createElement('div');
+          card.className = 'bg-white rounded-xl shadow-md p-4 border-l-4 border-[#2E9E78]';
+
+          const top = document.createElement('div');
+          top.className = 'flex items-center justify-between mb-2';
+          const code = document.createElement('span');
+          code.className = 'text-2xl font-extrabold tracking-widest';
+          code.textContent = '#' + o.id.slice(0, 5).toUpperCase();
+          const st = document.createElement('span');
+          st.className = 'rounded-full px-3 py-1 text-sm font-bold ' + (badge[o.status] || badge.New);
+          st.textContent = o.status;
+          top.append(code, st);
+
+          const who = document.createElement('p');
+          who.className = 'font-bold';
+          who.textContent = o.customer + ' · ';
+          const tel = document.createElement('a');
+          tel.href = 'tel:' + String(o.phone).replace(/[^\d+]/g, '');
+          tel.className = 'text-[#2E9E78] underline';
+          tel.textContent = o.phone;
+          who.append(tel);
+
+          const time = document.createElement('p');
+          time.className = 'text-sm text-gray-500 mb-2';
+          time.textContent = fmt(toDate(o.createdAt)) + (o.status === 'Paid' ? ' · paid ' + fmt(toDate(o.paidAt)) : '');
+
+          const ul = document.createElement('ul');
+          ul.className = 'border-t border-[#6B4430]/20 pt-2 mb-2 space-y-1';
+          items.forEach((i) => {
+            const li = document.createElement('li');
+            li.className = 'flex justify-between';
+            const a = document.createElement('span');
+            a.textContent = i.qty + ' x ' + i.name;
+            const b = document.createElement('span');
+            b.textContent = i.qty * i.price + ' ETB';
+            li.append(a, b);
+            ul.append(li);
+          });
+
+          const totalRow = document.createElement('div');
+          totalRow.className = 'flex justify-between font-extrabold text-lg border-t border-[#6B4430]/20 pt-2 mb-3';
+          const tl = document.createElement('span');
+          tl.textContent = 'Total';
+          const tv = document.createElement('span');
+          tv.className = 'text-[#2E9E78]';
+          tv.textContent = o.total + ' ETB';
+          totalRow.append(tl, tv);
+
+          card.append(top, who, time, ul, totalRow);
+
+          const calc = items.reduce((s, i) => s + i.qty * i.price, 0);
+          if (calc !== o.total) {
+            const warn = document.createElement('p');
+            warn.className = 'bg-red-100 text-red-700 font-bold text-sm rounded-lg p-2 mb-3';
+            warn.textContent = 'Warning: the total does not match the items (items add up to ' + calc + ' ETB). Check before marking as paid.';
+            card.append(warn);
+          }
+
+          const actions = document.createElement('div');
+          actions.className = 'flex flex-wrap gap-2';
+          const green = 'bg-[#2E9E78] text-white';
+          const gray = 'bg-gray-200 text-gray-700';
+          if (o.status === 'New') {
+            actions.append(makeButton('Mark Ready', green, () => setStatus(o.id, 'Ready')));
+            actions.append(makeButton('Cancel', gray, () => setStatus(o.id, 'Cancelled')));
+          } else if (o.status === 'Ready') {
+            actions.append(makeButton('Mark Paid', green, () => setStatus(o.id, 'Paid')));
+            actions.append(makeButton('Cancel', gray, () => setStatus(o.id, 'Cancelled')));
+          } else if (o.status === 'Paid') {
+            actions.append(makeButton('Undo (back to Ready)', gray, () => setStatus(o.id, 'Ready')));
+          } else {
+            actions.append(makeButton('Restore', gray, () => setStatus(o.id, 'New')));
+          }
+          card.append(actions);
+
+          list.append(card);
+        });
+      }
+    </script>
+  </body>
+</html>
