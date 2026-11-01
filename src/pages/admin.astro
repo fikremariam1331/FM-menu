@@ -1,5 +1,15 @@
+
 ---
 import '../styles/global.css';
+
+const getImgUrl = (path: string) => {
+  if (!path) return '';
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+  const base = import.meta.env.BASE_URL.endsWith('/')
+    ? import.meta.env.BASE_URL
+    : import.meta.env.BASE_URL + '/';
+  return `${base}${cleanPath}`;
+};
 ---
 
 <html lang="en">
@@ -8,6 +18,11 @@ import '../styles/global.css';
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex, nofollow" />
     <title>Orders</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href={getImgUrl('/apple-touch-icon.png')} />
+    <link rel="icon" type="image/png" sizes="32x32" href={getImgUrl('/favicon-32x32.png')} />
+    <link rel="icon" type="image/png" sizes="16x16" href={getImgUrl('/favicon-16x16.png')} />
+    <link rel="manifest" href={getImgUrl('/site.webmanifest')} />
   </head>
   <body class="bg-[#FBF8F3] text-[#6B4430] font-sans antialiased min-h-screen">
     <!-- Login -->

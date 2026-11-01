@@ -287,12 +287,15 @@ const getImgUrl = (path) => {
           aria-label="Close">✕</button
         >
 
-        <img
-          id="item-image"
-          src=""
-          alt=""
-          class="w-full h-56 object-cover rounded-t-2xl"
-        />
+        <!-- Skeleton Wrapper for Modal Image -->
+        <div class="w-full h-56 bg-[#e9e1d6] animate-pulse relative overflow-hidden rounded-t-2xl">
+          <img
+            id="item-image"
+            src=""
+            alt=""
+            class="w-full h-full object-cover opacity-0 transition-opacity duration-500 ease-in-out"
+          />
+        </div>
 
         <div class="p-5">
           <h3 id="item-name" class="text-2xl font-extrabold text-[#6B4430]">
@@ -355,20 +358,24 @@ const getImgUrl = (path) => {
         >
       </div>
 
-      <!-- Category cards -->
-      <div class="overflow-x-auto hide-scrollbar">
-        <div class="flex gap-3 px-4 pb-2 w-max">
+      <!-- Category cards (Sticky) -->
+      <div class="sticky top-[68px] sm:top-[88px] z-40 bg-[#FBF8F3] shadow-sm overflow-x-auto hide-scrollbar py-2">
+        <div class="flex gap-3 px-4 w-max">
           {
             menuData.categories.map((category) => (
-              <a
+                            <a
                 href={`#${category.id}`}
                 class="w-44 shrink-0 bg-white rounded-2xl shadow-md overflow-hidden flex flex-col border-b-4 border-[#2E9E78]"
               >
-                <img
-                  src={getImgUrl(category.image)}
-                  alt={category.name.en}
-                  class="w-full h-32 object-cover"
-                />
+                <!-- Skeleton Wrapper -->
+                <div class="w-full h-32 bg-[#e9e1d6] animate-pulse relative overflow-hidden">
+                  <img
+                    src={getImgUrl(category.image)}
+                    alt={category.name.en}
+                    class="w-full h-full object-cover opacity-0 transition-opacity duration-500 ease-in-out"
+                    onload="this.classList.remove('opacity-0'); this.classList.add('opacity-100'); this.parentElement.classList.remove('animate-pulse', 'bg-[#e9e1d6]');"
+                  />
+                </div>
 
                 <span class="px-2 py-4 text-center font-bold text-sm text-[#6B4430]">
                   <span class="lang-en">{category.name.en}</span>
@@ -390,15 +397,21 @@ const getImgUrl = (path) => {
             </h2>
             <div class="space-y-4">
               {category.items.map((item) => (
-                <article
+                                <article
                   class="item-card flex bg-white rounded-xl shadow-md overflow-hidden h-[185px] cursor-pointer"
                   data-item={JSON.stringify(item)}
                 >
-                  <img
-                    src={getImgUrl(item.image)}
-                    alt={item.name.en}
-                    class="w-44 h-full object-cover shrink-0"
-                  />
+                  <!-- Skeleton Wrapper for Item Image -->
+                  <div class="w-44 h-full shrink-0 bg-[#e9e1d6] animate-pulse relative">
+                    <img
+                      src={getImgUrl(item.image)}
+                      alt={item.name.en}
+                      loading="lazy"
+                      class="w-full h-full object-cover opacity-0 transition-opacity duration-500 ease-in-out"
+                      onload="this.classList.remove('opacity-0'); this.classList.add('opacity-100'); this.parentElement.classList.remove('animate-pulse', 'bg-[#e9e1d6]');"
+                    />
+                  </div>
+
                   <div class="flex flex-col justify-center px-5 flex-grow">
                     <h3 class="text-2xl font-bold leading-tight text-[#6B4430]">
                       <span class="lang-en">{item.name.en}</span>
@@ -651,7 +664,6 @@ const getImgUrl = (path) => {
       document.querySelectorAll(".item-card").forEach((card) => {
         card.addEventListener("click", () => {
           const item = JSON.parse(card.dataset.item);
-
           const img = document.getElementById("item-image");
           if (img) {
             // FIX: Combine baseUrl with the image path for GitHub Pages
@@ -660,8 +672,21 @@ const getImgUrl = (path) => {
               : item.image;
             const fullBase = baseUrl.endsWith("/") ? baseUrl : baseUrl + "/";
 
+            // 1. Reset image to hidden and show the pulsing skeleton
+            img.classList.add("opacity-0");
+            img.classList.remove("opacity-100");
+            img.parentElement.classList.add("animate-pulse", "bg-[#e9e1d6]");
+
+            // 2. Set the new image source
             img.src = `${fullBase}${cleanPath}`;
             img.alt = item.name.en;
+
+            // 3. When the new image loads, fade it in and remove the skeleton
+            img.onload = () => {
+              img.classList.remove("opacity-0");
+              img.classList.add("opacity-100");
+              img.parentElement.classList.remove("animate-pulse", "bg-[#e9e1d6]");
+            };
           }
 
           const nameEl = document.getElementById("item-name");
@@ -895,10 +920,10 @@ const getImgUrl = (path) => {
         </h3>
         <p class="text-[#6B4430] mb-1"><span class="lang-en">Your order number</span><span class="lang-am">የትዕዛዝ ቁጥርዎ</span></p>
         <p id="success-code" class="text-4xl font-extrabold text-[#2E9E78] tracking-widest mb-3"></p>
-        <p class="text-sm text-gray-600 mb-4">
-          <span class="lang-en">Please show this number to the cashier. We will call you when it is ready.</span>
-          <span class="lang-am">ይህንን ቁጥር ለካሼሩ ያሳዩ። ዝግጁ ሲሆን እንደውልልዎታለን።</span>
-        </p>
+              <p class="text-sm text-gray-600 mb-4">
+        <span class="lang-en">Keep this number for your reference. We will call you on the phone number you gave us to confirm your order.</span>
+        <span class="lang-am">ይህንን ቁጥር ለማጣቀሻ ያስቀምጡ። ትዕዛዝዎን ለማረጋገጥ በሰጡን ስልክ ቁጥር እንደውልልዎታለን።</span>
+      </p>
               <a id="success-whatsapp" href="#" target="_blank" rel="noopener" class="block w-full bg-[#25D366] text-white font-bold rounded-lg py-3 mb-3">
         <span class="lang-en">Send order on WhatsApp</span><span class="lang-am">ትዕዛዙን በዋትስአፕ ላክ</span>
       </a>
@@ -908,6 +933,11 @@ const getImgUrl = (path) => {
       document
         .getElementById("close-success")
         .addEventListener("click", closeAllModals);
+              document
+        .getElementById("success-whatsapp")
+        .addEventListener("click", () => {
+          setTimeout(closeAllModals, 300);
+        });
 
       document.addEventListener("order-placed", (e) => {
         Object.keys(cart).forEach((k) => delete cart[k]);
@@ -916,60 +946,237 @@ const getImgUrl = (path) => {
         document.getElementById("cust-phone").value = "";
         closeAllModals();
         document.getElementById("success-code").textContent = e.detail.code;
-            const d = e.detail;
-    const lines = (d.items || []).map((i) => i.qty + ' x ' + i.name + ' = ' + (i.qty * i.price) + ' ETB');
-    const msg =
-      'New order #' + d.code + '\n' +
-      'Name: ' + d.name + '\n' +
-      'Phone: ' + d.phone + '\n\n' +
-      lines.join('\n') + '\n\n' +
-      'Total: ' + d.total + ' ETB';
-    const wa = document.getElementById('success-whatsapp');
-    if (wa) wa.href = 'https://wa.me/251913226793?text=' + encodeURIComponent(msg);
+        const d = e.detail;
+        const pickEmoji = (name) => {
+          const n = name.toLowerCase();
+          if (n.includes("burger")) return "🍔";
+          if (n.includes("pizza")) return "🍕";
+          if (n.includes("salad")) return "🥗";
+          if (
+            n.includes("wrap") ||
+            n.includes("sandwich") ||
+            n.includes("quesadilla")
+          )
+            return "🌯";
+          if (n.includes("omelet") || n.includes("egg") || n.includes("ful"))
+            return "🍳";
+          if (n.includes("waffle")) return "🧇";
+          if (n.includes("pancake")) return "🥞";
+          if (n.includes("toast") || n.includes("croissant")) return "🥐";
+          if (n.includes("oats")) return "🥣";
+          if (n.includes("tea") || n.includes("boba")) return "🧋";
+          if (
+            n.includes("juice") ||
+            n.includes("smoothie") ||
+            n.includes("milkshake") ||
+            n.includes("frappuccino")
+          )
+            return "🥤";
+          if (
+            n.includes("coffee") ||
+            n.includes("latte") ||
+            n.includes("cappuccino") ||
+            n.includes("espresso") ||
+            n.includes("macchiato") ||
+            n.includes("mocha") ||
+            n.includes("chocolate")
+          )
+            return "☕";
+          return "🍽️";
+        };
+
+        const lines = (d.items || []).map(
+          (i) =>
+            pickEmoji(i.name) +
+            " " +
+            i.qty +
+            " × " +
+            i.name +
+            " — *" +
+            i.qty * i.price +
+            " ETB*",
+        );
+        const when = new Date().toLocaleString("en-GB", {
+          day: "numeric",
+          month: "short",
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        const line = "━━━━━━━━━━━━━━";
+        const msg =
+          "🔔 *NEW ORDER* 🔔\n" +
+          "🏷️ *Order #" +
+          d.code +
+          "*\n" +
+          "🕒 " +
+          when +
+          "\n" +
+          line +
+          "\n\n" +
+          "👤 *Customer*\n" +
+          d.name +
+          "\n" +
+          "📞 " +
+          d.phone +
+          "\n\n" +
+          "🛒 *Order Details*\n" +
+          lines.join("\n") +
+          "\n\n" +
+          line +
+          "\n" +
+          "💰 *TOTAL: " +
+          d.total +
+          " ETB*\n" +
+          "⏳ _Status: waiting for confirmation_\n\n" +
+          "🙏 _Thank you for ordering from FM Juice, Salad & Burger!_";
+        const wa = document.getElementById("success-whatsapp");
+        if (wa)
+          wa.href =
+            "https://api.whatsapp.com/send?phone=251913226793&text=" +
+            encodeURIComponent(msg);
         openModal("success-modal");
       });
-    </script>
 
-    <script>
-      import { db } from "../lib/firebase";
-      import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+      
+      // ---------- Back to top ----------
+      const topBtn = document.createElement('button');
+      topBtn.type = 'button';
+      topBtn.id = 'back-to-top';
+      topBtn.setAttribute('aria-label', 'Back to top');
+      topBtn.className =
+        'fixed right-4 z-[54] w-12 h-12 rounded-full bg-[#2E9E78] text-white shadow-lg flex items-center justify-center transition-all duration-300 opacity-0 pointer-events-none translate-y-4';
+      topBtn.style.bottom = '20px';
+      topBtn.innerHTML =
+        '<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>';
+      document.body.appendChild(topBtn);
 
-      document.addEventListener("submit-order", async (e) => {
-        const { name, phone, items, total } = (e as CustomEvent).detail;
-        const btn = document.getElementById("place-order") as HTMLButtonElement;
-        const err = document.getElementById("checkout-error")!;
+      function placeTopBtn() {
+        const barEl = document.getElementById('cart-bar');
+        const barShown = barEl && !barEl.classList.contains('hidden');
+        topBtn.style.bottom = barShown ? '100px' : '20px';
+      }
 
-        btn.disabled = true;
-        btn.classList.add("opacity-60");
-        try {
-          const ref = await addDoc(collection(db, "orders"), {
-            customer: name,
-            phone: phone,
-            items: items,
-            total: total,
-            status: "New",
-            createdAt: serverTimestamp(),
-          });
-          document.dispatchEvent(
-            new CustomEvent("order-placed", {
-              detail: {
-                code: ref.id.slice(0, 5).toUpperCase(),
-                name,
-                phone,
-                items,
-                total,
-              },
-            }),
-          );
-        } catch (error) {
-          err.textContent =
-            "Could not send the order. Please check your internet and try again.";
-          err.classList.remove("hidden");
-        } finally {
-          btn.disabled = false;
-          btn.classList.remove("opacity-60");
-        }
+      function toggleTopBtn() {
+        const show = window.scrollY > 400;
+        topBtn.classList.toggle('opacity-0', !show);
+        topBtn.classList.toggle('pointer-events-none', !show);
+        topBtn.classList.toggle('translate-y-4', !show);
+      }
+
+      topBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       });
+      window.addEventListener('scroll', toggleTopBtn, { passive: true });
+      document.addEventListener('cart-changed', placeTopBtn);
+      placeTopBtn();
+      toggleTopBtn();
+
+      
+      // ---------- Search ----------
+           const searchCards = Array.from(document.querySelectorAll('.item-card')).map((card) => {
+            const item = JSON.parse(card.dataset.item);
+            const sec = card.closest('section');
+            const heading = sec ? sec.querySelector('h2') : null;
+            const categoryText = heading ? heading.textContent : '';
+            return { card, text: (item.name.en + ' ' + item.name.am + ' ' + categoryText).toLowerCase() };
+      });
+      const searchSections = Array.from(
+        new Set(searchCards.map((c) => c.card.closest('section')).filter(Boolean))
+      );
+      const firstMenuSection = searchSections[0];
+
+      if (firstMenuSection) {
+        const searchWrap = document.createElement('div');
+        searchWrap.className = 'px-4 mt-4';
+        searchWrap.innerHTML = `
+          <div class="relative">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xl">🔍</span>
+            <input id="menu-search" type="search" autocomplete="off" placeholder="Search / ፈልግ..." class="w-full bg-white border-2 border-[#6B4430]/30 rounded-full py-3 pl-12 pr-4 text-gray-800 shadow-sm focus:outline-none focus:border-[#2E9E78]" />
+          </div>
+          <p id="search-empty" class="hidden text-center text-gray-500 py-8">
+            <span class="lang-en">No items found.</span><span class="lang-am">ምንም አልተገኘም።</span>
+          </p>`;
+        firstMenuSection.parentNode.insertBefore(searchWrap, firstMenuSection);
+
+        const searchInput = document.getElementById('menu-search');
+        const searchEmpty = document.getElementById('search-empty');
+
+        function runSearch() {
+          const q = searchInput.value.trim().toLowerCase();
+          searchCards.forEach(({ card, text }) => {
+            card.style.display = !q || text.includes(q) ? '' : 'none';
+          });
+          let anyShown = false;
+          searchSections.forEach((sec) => {
+            const visible = Array.from(sec.querySelectorAll('.item-card')).some(
+              (c) => c.style.display !== 'none'
+            );
+            sec.style.display = visible ? '' : 'none';
+            if (visible) anyShown = true;
+          });
+          searchEmpty.classList.toggle('hidden', anyShown);
+        }
+        searchInput.addEventListener('input', runSearch);
+      }
+
+      
+    </script>
+    <script>
+        import { db } from '../lib/firebase';
+        import { doc, runTransaction, serverTimestamp } from 'firebase/firestore';
+
+        // Today's date in Ethiopia time
+        function addisToday() {
+          const parts = new Intl.DateTimeFormat('en-US', {
+            timeZone: 'Africa/Addis_Ababa',
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+          }).formatToParts(new Date());
+          const get = (t: string) => parts.find((p) => p.type === t)!.value;
+          return { year: get('year'), month: get('month'), day: get('day') };
+        }
+
+        document.addEventListener('submit-order', async (e) => {
+          const { name, phone, items, total } = (e as CustomEvent).detail;
+          const btn = document.getElementById('place-order') as HTMLButtonElement;
+          const err = document.getElementById('checkout-error')!;
+
+          btn.disabled = true;
+          btn.classList.add('opacity-60');
+
+          try {
+            const { year, month, day } = addisToday();
+            const counterRef = doc(db, 'counters', year + '-' + month + '-' + day);
+
+            const code = await runTransaction(db, async (tx) => {
+              const snap = await tx.get(counterRef);
+              const next = snap.exists() ? snap.data().count + 1 : 1;
+              const orderCode = 'FM-' + month + '-' + day + '-' + String(next).padStart(3, '0');
+
+              tx.set(counterRef, { count: next });
+              tx.set(doc(db, 'orders', orderCode), {
+                customer: name,
+                phone: phone,
+                items: items,
+                total: total,
+                status: 'New',
+                createdAt: serverTimestamp(),
+              });
+              return orderCode;
+            });
+
+            document.dispatchEvent(
+              new CustomEvent('order-placed', { detail: { code, name, phone, items, total } })
+            );
+          } catch (error) {
+            err.textContent = 'Could not send the order. Please check your internet and try again.';
+            err.classList.remove('hidden');
+          } finally {
+            btn.disabled = false;
+            btn.classList.remove('opacity-60');
+          }
+        });
     </script>
 
     <style is:global>
