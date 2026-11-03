@@ -1,5 +1,5 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
+import { initializeFirestore, getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCtJrj0kfuuxVKZg8Q6-dCmYa9ZJ829gfY',
@@ -12,4 +12,12 @@ const firebaseConfig = {
 
 const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 
-export const db = getFirestore(app);
+let database;
+try {
+  // Falls back to a simpler connection quickly when the live connection is blocked or slow
+  database = initializeFirestore(app, { experimentalAutoDetectLongPolling: true });
+} catch (e) {
+  database = getFirestore(app);
+}
+
+export const db = database;

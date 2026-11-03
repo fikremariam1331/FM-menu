@@ -24,32 +24,68 @@ const getImgUrl = (path) => {
 ---
 
 <html lang="en" data-lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{menuData.restaurant} Menu</title>
-    <meta name="description" content="Digital menu" />
 
-    <!-- Favicons and Manifest wrapped with getImgUrl -->
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href={getImgUrl("/apple-touch-icon.png")}
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href={getImgUrl("/favicon-32x32.png")}
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href={getImgUrl("/favicon-16x16.png")}
-    />
-    <link rel="manifest" href={getImgUrl("/site.webmanifest")} />
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Page Title -->
+  <title>{menuData.restaurant} Menu</title>
+
+  <!-- SEO Metadata -->
+  <meta
+    name="description"
+    content="Explore the FM Juice, Salad & Burger Bar digital menu. Fresh juices, delicious salads and premium burgers."
+  />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph Metadata -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={`${menuData.restaurant} Menu`} />
+  <meta
+    property="og:description"
+    content="Explore our fresh juices, delicious salads and premium burgers."
+  />
+  <meta
+    property="og:url"
+    content="https://fikremariam1331.github.io/FM-menu/"
+  />
+  <meta property="og:site_name" content={menuData.restaurant} />
+
+  <!-- Twitter Metadata -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content={`${menuData.restaurant} Menu`} />
+  <meta
+    name="twitter:description"
+    content="Fresh juices, salads and delicious burgers at FM Juice, Salad & Burger Bar."
+  />
+
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#4B1B2A" />
+
+  <!-- Favicons -->
+  <link
+    rel="apple-touch-icon"
+    sizes="180x180"
+    href={getImgUrl("/apple-touch-icon.png")}
+  />
+  <link
+    rel="icon"
+    type="image/png"
+    sizes="32x32"
+    href={getImgUrl("/favicon-32x32.png")}
+  />
+  <link
+    rel="icon"
+    type="image/png"
+    sizes="16x16"
+    href={getImgUrl("/favicon-16x16.png")}
+  />
+
+  <!-- Web App Manifest -->
+  <link rel="manifest" href={getImgUrl("/site.webmanifest")} />
+</head>
+
   <body class="bg-[#FBF8F3] text-[#6B4430] font-sans antialiased">
     <!-- Overlay -->
     <div
@@ -912,22 +948,55 @@ const getImgUrl = (path) => {
       success.id = "success-modal";
       success.className =
         "modal fixed inset-0 z-[80] hidden items-center justify-center bg-black/50 px-4";
-      success.innerHTML = `
-      <div class="bg-white rounded-2xl w-full max-w-sm p-6 text-center">
+           success.innerHTML = `
+      <div class="bg-white rounded-2xl w-full max-w-sm p-6 text-center max-h-[90vh] overflow-y-auto">
         <div class="text-5xl mb-2">✅</div>
         <h3 class="text-2xl font-extrabold text-[#6B4430] mb-2">
           <span class="lang-en">Order received!</span><span class="lang-am">ትዕዛዝዎ ተቀብለናል!</span>
         </h3>
         <p class="text-[#6B4430] mb-1"><span class="lang-en">Your order number</span><span class="lang-am">የትዕዛዝ ቁጥርዎ</span></p>
+        
         <p id="success-code" class="text-4xl font-extrabold text-[#2E9E78] tracking-widest mb-3"></p>
-              <p class="text-sm text-gray-600 mb-4">
-        <span class="lang-en">Keep this number for your reference. We will call you on the phone number you gave us to confirm your order.</span>
-        <span class="lang-am">ይህንን ቁጥር ለማጣቀሻ ያስቀምጡ። ትዕዛዝዎን ለማረጋገጥ በሰጡን ስልክ ቁጥር እንደውልልዎታለን።</span>
-      </p>
-              <a id="success-whatsapp" href="#" target="_blank" rel="noopener" class="block w-full bg-[#25D366] text-white font-bold rounded-lg py-3 mb-3">
-        <span class="lang-en">Send order on WhatsApp</span><span class="lang-am">ትዕዛዙን በዋትስአፕ ላክ</span>
-      </a>
-      <button type="button" id="close-success" class="w-full bg-[#2E9E78] text-white font-bold rounded-lg py-3">OK</button>
+
+        <!-- PAYMENT BOX -->
+        <div class="bg-[#FBF8F3] border border-[#6B4430]/20 rounded-xl p-3 mb-4 text-left">
+          <p class="text-sm font-bold text-[#6B4430] mb-1 text-center">
+            <span class="lang-en">Pay using Telebirr or Bank</span>
+            <span class="lang-am">በቴሌብር ወይም በባንክ ይክፈሉ</span>
+          </p>
+          
+          <!-- Telebirr Info -->
+          <div class="flex justify-between items-center bg-white p-2 rounded-lg mb-2 border border-gray-100">
+            <div>
+              <p class="text-xs text-gray-500 font-bold">Telebirr</p>
+              <p class="font-extrabold text-[#2E9E78]">0913226793</p> 
+              <p class="text-xs text-gray-500">Name: Fikremariam Mekonnen</p> 
+            </div>
+            <button onclick="navigator.clipboard.writeText('0913226793'); alert('Telebirr number copied!')" class="bg-[#F5B800] text-[#6B4430] text-xs font-bold px-3 py-1 rounded-md">Copy</button>
+          </div>
+
+          <!-- Bank Info -->
+          <div class="flex justify-between items-center bg-white p-2 rounded-lg border border-gray-100">
+            <div>
+              <p class="text-xs text-gray-500 font-bold">CBE Bank</p>
+              <p class="font-extrabold text-[#2E9E78]">1000160589489</p> 
+              <p class="text-xs text-gray-500">Name: Fikremariam Mekonnen</p> 
+            </div>
+            <button onclick="navigator.clipboard.writeText('1000160589489'); alert('Bank account copied!')" class="bg-[#F5B800] text-[#6B4430] text-xs font-bold px-3 py-1 rounded-md">Copy</button>
+          </div>
+        </div>
+        <!-- END OF PAYMENT BOX -->
+
+        <p class="text-sm text-gray-600 mb-4">
+          <span class="lang-en">Keep this number for your reference. We will call you to confirm your order. Please send a screenshot of your payment on WhatsApp.</span>
+          <span class="lang-am">ይህንን ቁጥር ለማጣቀሻ ያስቀምጡ። ትዕዛዝዎን ለማረጋገጥ በሰጡን ስልክ ቁጥር እንደውልልዎታለን። እባክዎን የከፈሉበትን ስክሪንሾት በዋትስአፕ ይላኩ።</span>
+        </p>
+        
+        <a id="success-whatsapp" href="#" target="_blank" rel="noopener" class="block w-full bg-[#25D366] text-white font-bold rounded-lg py-3 mb-3">
+          <span class="lang-en">Send order on WhatsApp</span><span class="lang-am">ትዕዛዙን በዋትስአፕ ላክ</span>
+        </a>
+        
+        <button type="button" id="close-success" class="w-full bg-[#2E9E78] text-white font-bold rounded-lg py-3">OK</button>
       </div>`;
       document.body.appendChild(success);
       document
@@ -939,101 +1008,63 @@ const getImgUrl = (path) => {
           setTimeout(closeAllModals, 300);
         });
 
-      document.addEventListener("order-placed", (e) => {
+            document.addEventListener("order-placed", (e) => {
         Object.keys(cart).forEach((k) => delete cart[k]);
         refreshQty();
         document.getElementById("cust-name").value = "";
         document.getElementById("cust-phone").value = "";
         closeAllModals();
         document.getElementById("success-code").textContent = e.detail.code;
+
         const d = e.detail;
+        const isAm = document.documentElement.dataset.lang === "am";
+        const unit = isAm ? "ብር" : "ETB";
+
         const pickEmoji = (name) => {
           const n = name.toLowerCase();
           if (n.includes("burger")) return "🍔";
           if (n.includes("pizza")) return "🍕";
           if (n.includes("salad")) return "🥗";
-          if (
-            n.includes("wrap") ||
-            n.includes("sandwich") ||
-            n.includes("quesadilla")
-          )
-            return "🌯";
-          if (n.includes("omelet") || n.includes("egg") || n.includes("ful"))
-            return "🍳";
+          if (n.includes("wrap") || n.includes("sandwich") || n.includes("quesadilla")) return "🌯";
+          if (n.includes("omelet") || n.includes("egg") || n.includes("ful")) return "🍳";
           if (n.includes("waffle")) return "🧇";
           if (n.includes("pancake")) return "🥞";
           if (n.includes("toast") || n.includes("croissant")) return "🥐";
           if (n.includes("oats")) return "🥣";
           if (n.includes("tea") || n.includes("boba")) return "🧋";
-          if (
-            n.includes("juice") ||
-            n.includes("smoothie") ||
-            n.includes("milkshake") ||
-            n.includes("frappuccino")
-          )
-            return "🥤";
-          if (
-            n.includes("coffee") ||
-            n.includes("latte") ||
-            n.includes("cappuccino") ||
-            n.includes("espresso") ||
-            n.includes("macchiato") ||
-            n.includes("mocha") ||
-            n.includes("chocolate")
-          )
-            return "☕";
+          if (n.includes("juice") || n.includes("smoothie") || n.includes("milkshake") || n.includes("frappuccino")) return "🥤";
+          if (n.includes("coffee") || n.includes("latte") || n.includes("cappuccino") || n.includes("espresso") || n.includes("macchiato") || n.includes("mocha") || n.includes("chocolate")) return "☕";
           return "🍽️";
         };
 
         const lines = (d.items || []).map(
-          (i) =>
-            pickEmoji(i.name) +
-            " " +
-            i.qty +
-            " × " +
-            i.name +
-            " — *" +
-            i.qty * i.price +
-            " ETB*",
+          (i) => pickEmoji(i.name) + " " + i.qty + " × " + i.name + " — *" + i.qty * i.price + " " + unit + "*"
         );
-        const when = new Date().toLocaleString("en-GB", {
-          day: "numeric",
-          month: "short",
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-        const line = "━━━━━━━━━━━━━━";
-        const msg =
-          "🔔 *NEW ORDER* 🔔\n" +
-          "🏷️ *Order #" +
-          d.code +
-          "*\n" +
-          "🕒 " +
-          when +
-          "\n" +
-          line +
-          "\n\n" +
-          "👤 *Customer*\n" +
-          d.name +
-          "\n" +
-          "📞 " +
-          d.phone +
-          "\n\n" +
-          "🛒 *Order Details*\n" +
-          lines.join("\n") +
-          "\n\n" +
-          line +
-          "\n" +
-          "💰 *TOTAL: " +
-          d.total +
-          " ETB*\n" +
-          "⏳ _Status: waiting for confirmation_\n\n" +
-          "🙏 _Thank you for ordering from FM Juice, Salad & Burger!_";
+
+        const msg = isAm
+          ? "ሰላም 👋\n" +
+            "ከምግብና መጠጥ ዝርዝር ዉስጥ የሚከተለዉን ትእዛዝ አሁን አዝዣለሁ። የትእዛዝ ቁጥሩም *" + d.code + "* ነው።\n\n" +
+            "🛒 *ትዕዛዜ*\n" +
+            lines.join("\n") + "\n\n" +
+            "💰 *ጠቅላላ: " + d.total + " " + unit + "*\n" +
+            "👤 " + d.name + "\n" +
+            "📞 " + d.phone + "\n\n" +
+            "እባክዎ ትዕዛዜን ያረጋግጡልኝ። አመሰግናለሁ 🙏"
+          : "Hello 👋\n" +
+            "I just placed the following order from your food and drink menu. The order number is *" + d.code + "*.\n\n" +
+            "🛒 *My order*\n" +
+            lines.join("\n") + "\n\n" +
+            "💰 *Total: " + d.total + " " + unit + "*\n" +
+            "👤 " + d.name + "\n" +
+            "📞 " + d.phone + "\n\n" +
+            "Please confirm my order. Thank you 🙏";
+
         const wa = document.getElementById("success-whatsapp");
         if (wa)
           wa.href =
             "https://api.whatsapp.com/send?phone=251913226793&text=" +
             encodeURIComponent(msg);
+
         openModal("success-modal");
       });
 

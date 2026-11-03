@@ -1,4 +1,3 @@
-
 ---
 import '../styles/global.css';
 
@@ -79,6 +78,22 @@ const getImgUrl = (path: string) => {
       </main>
     </section>
 
+    <!-- Cancellation Modal -->
+    <div id="cancel-modal" class="fixed inset-0 z-[80] hidden items-center justify-center bg-black/50 px-4">
+      <div class="bg-white rounded-2xl w-full max-w-sm p-6 relative">
+        <button id="close-cancel-modal" class="absolute top-3 right-4 text-2xl leading-none text-black" aria-label="Close">✕</button>
+        
+        <h3 class="text-2xl font-extrabold text-[#6B4430] mb-2">Cancel Order</h3>
+        <p class="text-sm text-gray-500 mb-4">Please provide a reason. This will be sent to the customer via WhatsApp.</p>
+        
+        <textarea id="cancel-reason" rows="3" class="w-full border-2 border-[#6B4430]/30 rounded-lg p-3 text-gray-800 focus:outline-none focus:border-red-500 mb-4" placeholder="e.g., Item is out of stock, kitchen is closed..."></textarea>
+        
+        <button id="confirm-cancel-btn" class="w-full bg-red-600 text-white font-bold rounded-lg py-3 hover:bg-red-700 transition-colors">
+          Confirm Cancellation
+        </button>
+      </div>
+    </div>
+
     <script>
       import { db } from '../lib/firebase';
       import { getApp } from 'firebase/app';
@@ -95,6 +110,7 @@ const getImgUrl = (path: string) => {
         status: string;
         createdAt: any;
         paidAt: any;
+        cancelReason?: string;
       };
 
       const auth = getAuth(getApp());
@@ -110,6 +126,8 @@ const getImgUrl = (path: string) => {
       const fmt = (d: Date | null) =>
         d ? d.toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '...';
 
+      const orderCode = (id: string) => (id.startsWith('FM-') ? id : id.slice(0, 5).toUpperCase());
+
       function beep() {
         try {
           const Ctx = (window as any).AudioContext || (window as any).webkitAudioContext;
@@ -123,6 +141,35 @@ const getImgUrl = (path: string) => {
             ctx.close();
           }, 300);
         } catch (e) {}
+      }
+
+      // ---------- WhatsApp reply ----------
+      function waNumber(raw: string) {
+        let d = String(raw || '').replace(/\D/g, '');
+        if (d.startsWith('00')) d = d.slice(2);
+        if (d.startsWith('251')) return d;
+        if (d.startsWith('0')) return '251' + d.slice(1);
+        if (d.length === 9) return '251' + d;
+        return d;
+      }
+
+      function replyText(o: Order) {
+        const code = orderCode(o.id);
+        const name = o.customer;
+        const total = o.total + ' ETB';
+        switch (o.status) {
+          case 'Confirmed':
+            return 'Hello ' + name + ' 👋\n✅ Your order *' + code + '* is confirmed. We are preparing it now.\n\n💰 Total: *' + total + '*\nThank you! 🙏';
+          case 'Ready':
+            return 'Hello ' + name + ' 👋\n🍽️ Your order *' + code + '* is ready.\n\n💰 Total: *' + total + '*\nThank you! 🙏';
+          case 'Paid':
+            return 'Hello ' + name + ' 👋\n🙏 Thank you! We received your payment of *' + total + '* for order *' + code + '*.';
+          case 'Cancelled':
+            const reasonText = o.cancelReason ? `\n*Reason:* ${o.cancelReason}\n` : '';
+            return 'Hello ' + name + ' 👋\nSorry, your order *' + code + '* was cancelled.' + reasonText + '\nPlease contact us if you have any questions.';
+          default:
+            return 'Hello ' + name + ' 👋\nWe received your order *' + code + '*. We will confirm it shortly.\n\n💰 Total: *' + total + '*';
+        }
       }
 
       // ---------- Login ----------
@@ -210,6 +257,7 @@ const getImgUrl = (path: string) => {
       // ---------- Display ----------
       const badge: Record<string, string> = {
         New: 'bg-[#F5B800] text-[#6B4430]',
+        Confirmed: 'bg-purple-100 text-purple-800',
         Ready: 'bg-blue-100 text-blue-800',
         Paid: 'bg-[#2E9E78] text-white',
         Cancelled: 'bg-gray-200 text-gray-600',
@@ -224,14 +272,79 @@ const getImgUrl = (path: string) => {
         return b;
       }
 
+      function isOpen(s: string) {
+        return s === 'New' || s === 'Confirmed' || s === 'Ready';
+      }
+
+      // ---------- Cancellation Logic ----------
+      let activeCancelOrder: Order | null = null;
+      const cancelModal = $('cancel-modal');
+      const cancelReasonInput = document.getElementById('cancel-reason') as HTMLTextAreaElement;
+      const confirmCancelBtn = document.getElementById('confirm-cancel-btn') as HTMLButtonElement;
+      const closeCancelModalBtn = $('close-cancel-modal');
+
+      (window as any).openCancelModal = function(order: Order) {
+        activeCancelOrder = order;
+        cancelReasonInput.value = '';
+        cancelModal.classList.remove('hidden');
+        cancelModal.classList.add('flex');
+      };
+
+      function closeCancelModal() {
+        cancelModal.classList.add('hidden');
+        cancelModal.classList.remove('flex');
+        activeCancelOrder = null;
+      }
+
+      closeCancelModalBtn.addEventListener('click', closeCancelModal);
+      cancelModal.addEventListener('click', (e) => {
+        if (e.target === cancelModal) closeCancelModal();
+      });
+
+      confirmCancelBtn.addEventListener('click', async () => {
+        if (!activeCancelOrder) return;
+        
+        const reason = cancelReasonInput.value.trim();
+        if (!reason) {
+          alert("Please enter a reason for cancellation.");
+          return;
+        }
+
+        confirmCancelBtn.disabled = true;
+        confirmCancelBtn.textContent = "Cancelling...";
+
+        try {
+          // Update Firebase with new status AND the reason
+          await updateDoc(doc(db, 'orders', activeCancelOrder.id), {
+            status: 'Cancelled',
+            cancelReason: reason,
+          });
+
+          // Send WhatsApp message automatically
+          const phone = waNumber(activeCancelOrder.phone);
+          const code = orderCode(activeCancelOrder.id);
+          const message = `Hello ${activeCancelOrder.customer} 👋\nSorry, your order *${code}* was cancelled.\n\n*Reason:* ${reason}\n\nPlease contact us if you have any questions.`;
+          
+          window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+
+          closeCancelModal();
+        } catch (error) {
+          console.error("Error cancelling order: ", error);
+          alert("Could not cancel the order. Check your internet connection.");
+        } finally {
+          confirmCancelBtn.disabled = false;
+          confirmCancelBtn.textContent = "Confirm Cancellation";
+        }
+      });
+
       function render() {
         const paidToday = orders.filter((o) => o.status === 'Paid' && isToday(toDate(o.paidAt)));
         $('stat-sales').textContent = String(paidToday.reduce((s, o) => s + o.total, 0));
         $('stat-paid').textContent = String(paidToday.length);
-        $('stat-open').textContent = String(orders.filter((o) => o.status === 'New' || o.status === 'Ready').length);
+        $('stat-open').textContent = String(orders.filter((o) => isOpen(o.status)).length);
 
         const shown = orders.filter((o) => {
-          if (filter === 'active') return o.status === 'New' || o.status === 'Ready';
+          if (filter === 'active') return isOpen(o.status);
           if (filter === 'paid') return o.status === 'Paid' && isToday(toDate(o.paidAt));
           if (filter === 'cancelled') return o.status === 'Cancelled';
           return true;
@@ -247,10 +360,10 @@ const getImgUrl = (path: string) => {
           card.className = 'bg-white rounded-xl shadow-md p-4 border-l-4 border-[#2E9E78]';
 
           const top = document.createElement('div');
-          top.className = 'flex items-center justify-between mb-2';
+          top.className = 'flex items-center justify-between mb-2 gap-2';
           const code = document.createElement('span');
-          code.className = 'text-2xl font-extrabold tracking-widest';
-          code.textContent = '#' + o.id.slice(0, 5).toUpperCase();
+          code.className = 'text-xl font-extrabold tracking-wider';
+          code.textContent = '#' + orderCode(o.id);
           const st = document.createElement('span');
           st.className = 'rounded-full px-3 py-1 text-sm font-bold ' + (badge[o.status] || badge.New);
           st.textContent = o.status;
@@ -306,16 +419,28 @@ const getImgUrl = (path: string) => {
           const green = 'bg-[#2E9E78] text-white';
           const gray = 'bg-gray-200 text-gray-700';
           if (o.status === 'New') {
+            actions.append(makeButton('Confirm Order', green, () => setStatus(o.id, 'Confirmed')));
+            actions.append(makeButton('Cancel', gray, () => (window as any).openCancelModal(o)));
+          } else if (o.status === 'Confirmed') {
             actions.append(makeButton('Mark Ready', green, () => setStatus(o.id, 'Ready')));
-            actions.append(makeButton('Cancel', gray, () => setStatus(o.id, 'Cancelled')));
+            actions.append(makeButton('Cancel', gray, () => (window as any).openCancelModal(o)));
           } else if (o.status === 'Ready') {
             actions.append(makeButton('Mark Paid', green, () => setStatus(o.id, 'Paid')));
-            actions.append(makeButton('Cancel', gray, () => setStatus(o.id, 'Cancelled')));
+            actions.append(makeButton('Cancel', gray, () => (window as any).openCancelModal(o)));
           } else if (o.status === 'Paid') {
             actions.append(makeButton('Undo (back to Ready)', gray, () => setStatus(o.id, 'Ready')));
           } else {
             actions.append(makeButton('Restore', gray, () => setStatus(o.id, 'New')));
           }
+
+          const reply = document.createElement('a');
+          reply.href = 'https://api.whatsapp.com/send?phone=' + waNumber(o.phone) + '&text=' + encodeURIComponent(replyText(o));
+          reply.target = '_blank';
+          reply.rel = 'noopener';
+          reply.className = 'rounded-lg px-4 py-2 font-bold text-sm bg-[#25D366] text-white';
+          reply.textContent = 'Reply on WhatsApp';
+          actions.append(reply);
+
           card.append(actions);
 
           list.append(card);
