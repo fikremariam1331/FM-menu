@@ -274,8 +274,6 @@ const getImgUrl = (path) => {
     </div>
 
     <!-- Header -->
-
-    <!-- Header -->
     <header class="sticky top-0 z-50 bg-[#6B4430] border-b-4 border-[#2E9E78]">
       <div
         class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between"
@@ -431,7 +429,7 @@ const getImgUrl = (path) => {
       <!-- Menu sections -->
       {
         categorizedItems.map((category) => (
-          <section id={category.id} class="mt-4 px-4 scroll-mt-24">
+          <section id={category.id} class="mt-4 px-4 scroll-mt-[300px]"> <!-- CHANGED HERE -->
             <h2 class="inline-block text-3xl font-extrabold text-[#2E9E78] mb-4 pb-1 border-b-4 border-[#F5B800]">
               <span class="lang-en">{category.name.en}</span>
               <span class="lang-am">{category.name.am}</span>
