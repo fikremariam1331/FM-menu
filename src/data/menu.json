@@ -23,12 +23,12 @@
 
   "items": [
     
-    { "id": "7", "categoryId": "breakfast", "name": { "en": "Egg Sandwich", "am": "Egg Sandwich" }, "price": 250, "image": "images/img/egg sandwich..jpg", "ingredients": ["Bread", "Egg", "Lettuce", "Tomato", "Sauce"], "allergens": ["Gluten", "Egg"], "available": true},
+    { "id": "7", "categoryId": "breakfast", "name": { "en": "Egg Sandwich", "am": "Egg Sandwich" }, "price": 300, "image": "images/img/egg sandwich..jpg", "ingredients": ["Bread", "Egg", "Lettuce", "Tomato", "Sauce"], "allergens": ["Gluten", "Egg"], "available": true},
         {
       "id": "71",
       "categoryId": "breakfast",
-      "name": { "en": "Cheese Sandwich", "am": "ቺዝ ሳንድዊች" },
-      "price": 300,
+      "name": { "en": "Cheese and egg Sandwich", "am": "ቺዝ እና እንቁላል ሳንድዊች" },
+      "price": 350,
       "image": "images/img/cheese sandwich.jpg",
       "ingredients": ["Bread", "Cheese", "Butter"],
       "allergens": ["Gluten", "Milk"],
@@ -38,7 +38,7 @@
       "id": "72",
       "categoryId": "breakfast",
       "name": { "en": "Cheesy Chicken Sandwich", "am": "ቺዚ ቺክን ሳንድዊች" },
-      "price": 500,
+      "price": 400,
       "image": "images/img/cheesy-chicken-sandwich.png",
       "ingredients": ["Bread", "Grilled Chicken", "Cheese", "Lettuce", "Sauce"],
       "allergens": ["Gluten", "Milk"],
@@ -86,10 +86,10 @@
     { "id": "12", "categoryId": "eggs-omelettes", "name": { "en": "Fried Eggs", "am": "Fried Eggs" }, "price": 890, "image": "images/img/fried egg.jpg", "ingredients": ["Eggs", "Butter"], "allergens": ["Egg", "Milk"] },
     { "id": "13", "categoryId": "eggs-omelettes", "name": { "en": "Ful Madames", "am": "Ful Madames" }, "price": 580, "image": "images/img/ful madams.jpg", "ingredients": ["Fava beans", "Egg", "Onion", "Tomato", "Bread"], "allergens": ["Egg", "Gluten"] },
 
-    { "id": "14", "categoryId": "burger", "name": { "en": "FM Special Burger", "am": "FM Special Double Burger" }, "price": 650, "image": "images/img/fm-double-burger.jpg", "ingredients": ["Beef patty", "Burger bun", "Cheese", "Lettuce", "Tomato", "Sauce"], "allergens": ["Gluten", "Milk", "Egg"] }, 
-    { "id": "15", "categoryId": "burger", "name": { "en": "Crispy Chicken Burger", "am": "Special Burger" }, "price": 550, "image": "images/img/chrispy chicken burger.jpg", "ingredients": ["Crispy chicken", "Burger bun", "Lettuce", "Mayonnaise"], "allergens": ["Gluten", "Egg", "Milk"] },
-    { "id": "16", "categoryId": "burger", "name": { "en": "Cheese Burger", "am": "Normal Burger" }, "price": 400, "image": "images/img/cheese burger..jpg", "ingredients": ["Beef patty", "Burger bun", "Cheese", "Lettuce", "Tomato"], "allergens": ["Gluten", "Milk"] },
-    { "id": "17", "categoryId": "burger", "name": { "en": "Beef Burger", "am": "Beef Burger" }, "price": 700, "image": "images/img/beef burger..jpg", "ingredients": ["Beef patty", "Burger bun", "Lettuce", "Tomato", "Onion"], "allergens": ["Gluten"] },
+    { "id": "14", "categoryId": "burger", "name": { "en": "FM Special Double Burger", "am": "FM Special Double Burger" }, "price": 650, "image": "images/img/fm-double-burger.jpg", "ingredients": ["Beef patty", "Burger bun", "Cheese", "Lettuce", "Tomato", "Sauce"], "allergens": ["Gluten", "Milk", "Egg"] }, 
+    { "id": "15", "categoryId": "burger", "name": { "en": "Special Burger", "am": "Special Burger" }, "price": 550, "image": "images/img/special-burger.jpg", "ingredients": ["Crispy chicken", "Burger bun", "Lettuce", "Mayonnaise"], "allergens": ["Gluten", "Egg", "Milk"] },
+    { "id": "16", "categoryId": "burger", "name": { "en": "Cheese Burger", "am": "Cheese Burger" }, "price": 450, "image": "images/img/cheese burger.jpg", "ingredients": ["Beef patty", "Burger bun", "Cheese", "Lettuce", "Tomato"], "allergens": ["Gluten", "Milk"] },
+    { "id": "17", "categoryId": "burger", "name": { "en": "Normal Beef Burger", "am": "Normal Beef Burger" }, "price": 400, "image": "images/img/beef burger.jpg", "ingredients": ["Beef patty", "Burger bun", "Lettuce", "Tomato", "Onion"], "allergens": ["Gluten"] },
 
         {
       "id": "76",
@@ -135,7 +135,7 @@
       "id": "80",
       "categoryId": "juices",
       "name": { "en": "Special Juice", "am": "ስፔሻል ጁስ" },
-      "price": 300,
+      "price": 250,
       "image": "images/img/Special-juice.webp",
       "ingredients": ["Strawberry", "Avocado", "Mango", "Papaya", "Milk"],
       "allergens": ["Milk"],
@@ -145,7 +145,7 @@
       "id": "81",
       "categoryId": "milkshake",
       "name": { "en": "Strawberry Shake", "am": "ስትሮቤሪ ሼክ" },
-      "price": 300,
+      "price": 250,
       "image": "images/img/strawberry-shake.jpg",
       "ingredients": ["Strawberry", "Milk"],
       "allergens": ["Milk"],
@@ -156,9 +156,9 @@
       "id": "82",
       "categoryId": "juices",
       "name": { "en": "Flax-Omega", "am": "የተልባ ጁስ" },
-      "price": 200,
+      "price": 150,
       "image": "images/img/flaxseed-juice.webp",
-      "ingredients": ["Flaxseed powder", "Water"],
+      "ingredients": ["Flaxseed powder", "Banana", "Water"],
       "allergens": [],
       "available": true
     },
@@ -166,7 +166,7 @@
       "id": "83",
       "categoryId": "juices",
       "name": { "en": "Flax-Cream", "am": "ስፔሻል የተልባ ጁስ" },
-      "price": 250,
+      "price": 200,
       "image": "images/img/special-flax-juice.webp",
       "ingredients": ["Flaxseed", "Milk"],
       "allergens": ["Milk"],
@@ -176,7 +176,7 @@
       "id": "84",
       "categoryId": "healthy-smoothies",
       "name": { "en": "Protein Shake", "am": "ፕሮቲን ሼክ" },
-      "price": 350,
+      "price": 250,
       "image": "images/img/protein-shake.webp",
       "ingredients": ["Flaxseed", "Oats", "Peanut butter", "Sesame", "Banana", "Milk"],
       "allergens": ["Peanuts", "Milk", "Sesame"],
@@ -196,8 +196,8 @@
     { "id": "27", "categoryId": "mini-pancake-waffle", "name": { "en": "Fruit Nutella Special", "am": "Fruit Nutella Special" }, "price": 490, "image": "images/img/fruit nutella special waffle.jpg", "ingredients": ["Waffle", "Nutella", "Fresh fruit"], "allergens": ["Gluten", "Egg", "Milk", "Tree nuts", "Soy"] },
 
 
-    { "id": "29", "categoryId": "healthy-smoothies", "name": { "en": "Strawberry Banana", "am": "Strawberry Banana" }, "price": 300, "image": "images/img/Strawberry Banana.jpg", "ingredients": ["Strawberry", "Banana", "Milk"], "allergens": ["Milk"] },
-    { "id": "30", "categoryId": "healthy-smoothies", "name": { "en": "Mango Willness", "am": "Mango Willness" }, "price": 300, "image": "images/img/Mango willness.jpg", "ingredients": ["Mango", "Banana", "Milk"], "allergens": ["Milk"] },
+    { "id": "29", "categoryId": "healthy-smoothies", "name": { "en": "Strawberry Banana", "am": "Strawberry Banana" }, "price": 250, "image": "images/img/Strawberry Banana.jpg", "ingredients": ["Strawberry", "Banana", "Milk"], "allergens": ["Milk"] },
+    { "id": "30", "categoryId": "healthy-smoothies", "name": { "en": "Mango Willness", "am": "Mango Willness" }, "price": 250, "image": "images/img/Mango willness.jpg", "ingredients": ["Mango", "Banana", "Milk"], "allergens": ["Milk"] },
 
     { "id": "33", "categoryId": "juices", "name": { "en": "Watermelon Refresh", "am": "Watermelon Refresh" }, "price": 200, "image": "images/img/Watermelon refresh.jpg", "ingredients": ["Watermelon", "Mint", "Lime"] },
     {
@@ -297,7 +297,7 @@
     { "id": "63", "categoryId": "hot-coffee", "name": { "en": "Fasting Macchiato", "am": "Fasting Macchiato" }, "price": 280, "image": "images/img/fasting macchiato.jpg", "available": false },
     { "id": "64", "categoryId": "hot-coffee", "name": { "en": "Macchiato", "am": "Macchiato" }, "price": 170, "image": "images/img/macchiato.webp", "ingredients": ["Espresso", "Milk foam"], "allergens": ["Milk"], "available": false },
 
-     { "id": "69", "categoryId": "milkshake", "name": { "en": "Oreo (Cookies & Cream)", "am": "Oreo (Cookies & Cream)" }, "price": 580, "image": "images/img/oreo milkshake.webp", "ingredients": ["Milk", "Ice cream", "Chocolate cookies"], "allergens": ["Gluten", "Milk", "Soy"] },
+     { "id": "69", "categoryId": "milkshake", "name": { "en": "Oreo (Cookies & Cream)", "am": "Oreo (Cookies & Cream)" }, "price": 300, "image": "images/img/oreo milkshake.webp", "ingredients": ["Milk", "Ice cream", "Chocolate cookies"], "allergens": ["Gluten", "Milk", "Soy"] },
 
     { "id": "68", "categoryId": "milkshake", "name": { "en": "Strawberry Milkshake", "am": "Strawberry Milkshake" }, "price": 350, "image": "images/img/strawberry milkshake.webp", "ingredients": ["Milk", "Ice cream", "Strawberry"], "allergens": ["Milk"], "available":false },
 
