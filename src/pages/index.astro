@@ -1263,7 +1263,7 @@ const getImgUrl = (path) => {
         });
     </script>
 
-    <style is:global>
+       <style is:global>
       button,
       a,
       select,
@@ -1293,6 +1293,52 @@ const getImgUrl = (path) => {
       }
       html[data-lang="am"] .lang-en {
         display: none;
+      }
+
+      /* ---------- PRINT STYLES ---------- */
+      @media print {
+        /* Force the browser to print all background colors */
+        * {
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+
+        /* Force the header to keep its brown background */
+        header {
+          background-color: #6B4430 !important;
+          border-bottom: 4px solid #2E9E78 !important;
+          position: relative !important; /* Stops it from overlapping content */
+          margin-bottom: 20px !important;
+        }
+
+        /* Hide ALL interactive buttons, search bars, and sticky bars */
+        #open-menu, 
+        #lang-select, 
+        .sticky.top-\[68px\], /* The category cards */
+        [data-set-lang], /* Big language buttons */
+        input, /* Search bar */
+        .qty-minus, 
+        .qty-plus, 
+        .qty-value,
+        #cart-bar,
+        #back-to-top,
+        #coming-soon-toast {
+          display: none !important;
+        }
+
+        /* Clean up the food cards so they don't break across pages */
+        .item-card {
+          border: 1px solid #d1d5db !important;
+          box-shadow: none !important;
+          page-break-inside: avoid !important;
+          break-inside: avoid !important;
+          margin-bottom: 15px !important;
+        }
+
+        /* Remove the grey skeleton background from images */
+        .bg-\[\#e9e1d6\] {
+          background-color: transparent !important;
+        }
       }
     </style>
   </body>
