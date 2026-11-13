@@ -6,7 +6,7 @@
     { "id": "eggs-omelettes", "name": { "en": "Eggs & Omelettes", "am": "እንቁላል እና ኦምሌት" }, "image": "images/Omelet.jpg", "hidden": true },
     { "id": "burger", "name": { "en": "Burger", "am": "በርገር" }, "image": "images/Burger.jpg" },
     { "id": "juices", "name": { "en": "Fresh Juices", "am": "ፍሬሽ ጁሶች" }, "image": "images/juices-category.png" },
-    { "id": "salad-fruit-punch", "name": { "en": "Salads & Fruit Punch", "am": "ሰላጣዎች እና ፍራንት ፓንች" }, "image": "images/Salad and Fruit Punch.webp" },
+    { "id": "salad-fruit-punch", "name": { "en": "Salads & Fruit Punch", "am": "ሰላጣዎች እና ፍሩት ፓንች" }, "image": "images/Salad and Fruit Punch.webp" },
     { "id": "waffles-pancake-oats", "name": { "en": "Waffles, Pancake & Oats", "am": "Waffles, Pancake & Oats" }, "image": "images/Waffle with Crispy Chicken.jpg", "hidden": true },
     { "id": "mini-pancake-waffle", "name": { "en": "Mini Pancake & Waffle", "am": "Mini Pancake & Waffle" }, "image": "images/Pancake.jpg", "hidden": true },
     { "id": "healthy-smoothies", "name": { "en": "Healthy Smoothies", "am": "Healthy Smoothies" }, "image": "images/Peanut Butter Protien.jpg" },
@@ -50,7 +50,10 @@
     { "id": "27", "categoryId": "salad-fruit-punch", "name": { "en": "Special Half Salad", "am": "ስፔሻል ግማሽ ሰላጣ" }, "price": 400, "image": "images/img/special-half-salad.jpg", "ingredients": ["Lettuce", "Tomato", "Cucumber", "Onion", "Avocado", "Mango", "Apple", "Lemon", "Olive Oil"], "allergens": [], "available": true },
     { "id": "28", "categoryId": "salad-fruit-punch", "name": { "en": "Full Special Salad", "am": "ሙሉ ስፔሻል ሰላጣ" }, "price": 500, "image": "images/img/full-special-salad.jpg", "ingredients": ["Lettuce", "Tomato", "Cucumber", "Onion", "Avocado", "Mango", "Apple", "Lemon", "Olive Oil"], "allergens": [], "available": true },
     { "id": "29", "categoryId": "salad-fruit-punch", "name": { "en": "Chicken Salad", "am": "ቺክን ሰላጣ" }, "price": 600, "image": "images/img/chicken-salad.jpg", "ingredients": ["Lettuce", "Tomato", "Cucumber", "Onion", "Avocado", "Mango", "Grilled Chicken", "Lemon", "Olive Oil"], "allergens": [], "available": true },
-    { "id": "30", "categoryId": "salad-fruit-punch", "name": { "en": "Fruit Punch", "am": "ፍራንት ፓንች" }, "price": 250, "image": "images/img/fruit-punch.webp", "ingredients": ["Pineapple", "Orange", "Mango", "Lime"], "allergens": [], "available": true },
+
+    { "id": "30", "categoryId": "salad-fruit-punch", "name": { "en": "Fruit Punch", "am": "ፍሩት ፓንች በትንሹ" }, "price": 250, "image": "images/img/fruit-punch.webp", "ingredients": ["Pineapple", "Orange", "Mango", "Lime"], "allergens": [], "available": true },
+
+    { "id": "82", "categoryId": "salad-fruit-punch", "name": { "en": "Fruit Punch with wooden bowl", "am": "ፍሩት ፓንች በትልቁ" }, "price": 300, "image": "images/img/fruit-punch-big-bowl.webp", "ingredients": ["Pineapple", "Orange", "Mango", "Lime"], "allergens": [], "available": true },
 
     { "id": "31", "categoryId": "waffles-pancake-oats", "name": { "en": "Granola Oats Meal", "am": "Granola Oats Meal" }, "price": 900, "image": "images/img/granola oats meal.jpg", "ingredients": ["Oats", "Granola", "Milk", "Honey", "Fresh fruit"], "allergens": ["Gluten", "Milk", "Tree nuts"] },
     { "id": "32", "categoryId": "waffles-pancake-oats", "name": { "en": "Waffle with Crispy Chicken", "am": "Waffle with Crispy Chicken" }, "price": 1300, "image": "images/img/waffle with crispy chiken.jpg", "ingredients": ["Waffle", "Crispy chicken", "Syrup", "Butter"], "allergens": ["Gluten", "Egg", "Milk"] },
