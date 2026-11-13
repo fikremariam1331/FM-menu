@@ -88,7 +88,7 @@ const getImgUrl = (path) => {
   <link rel="manifest" href={getImgUrl("/site.webmanifest")} />
 </head>
 
-  <body class="bg-[#FBF8F3] text-[#6B4430] font-sans antialiased">
+  <body class="bg-[#F5F0E6] text-[#6B4430] font-sans antialiased">
     <!-- Overlay -->
     <div
       id="overlay"
@@ -397,8 +397,10 @@ const getImgUrl = (path) => {
         >
       </div>
 
-           <!-- Category cards (Sticky) -->
-      <div class="sticky top-[68px] sm:top-[88px] z-40 bg-[#FBF8F3] shadow-sm overflow-x-auto hide-scrollbar py-2">
+      
+
+                <!-- Category cards (Sticky) -->
+      <div class="sticky top-[68px] sm:top-[88px] z-40 bg-[#F5F0E6] shadow-sm overflow-x-auto hide-scrollbar py-2">
         <div class="flex gap-3 px-4 w-max">
           {
             categorizedItems.map((category) => (
@@ -1233,10 +1235,23 @@ const getImgUrl = (path) => {
             const { year, month, day } = addisToday();
             const counterRef = doc(db, 'counters', year + '-' + month + '-' + day);
 
-            const code = await runTransaction(db, async (tx) => {
-              const snap = await tx.get(counterRef);
-              const next = snap.exists() ? snap.data().count + 1 : 1;
-              const orderCode = 'FM-' + month + '-' + day + '-' + String(next).padStart(3, '0');
+                      // Helper function to get initials (e.g., "John Doe" -> "JD")
+          function getInitials(fullName) {
+            if (!fullName) return 'FM';
+            const parts = fullName.trim().toUpperCase().replace(/[^A-Z\s]/g, '').split(/\s+/);
+            if (parts.length === 0 || parts[0] === '') return 'FM';
+            if (parts.length === 1) return parts[0].substring(0, 2).padEnd(2, 'X'); 
+            return (parts[0][0] + parts[parts.length - 1][0]).substring(0, 2);
+          }
+
+          const initials = getInitials(name);
+
+          const code = await runTransaction(db, async (tx) => {
+            const snap = await tx.get(counterRef);
+            const next = snap.exists() ? snap.data().count + 1 : 1;
+            
+            // The new Order ID format: JD-11-2-001
+            const orderCode = initials + '-' + month + '-' + day + '-' + String(next).padStart(3, '0');
 
               tx.set(counterRef, { count: next });
               tx.set(doc(db, 'orders', orderCode), {
