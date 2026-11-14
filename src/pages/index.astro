@@ -588,6 +588,62 @@ const getImgUrl = (path) => {
       </div>
     </div>
 
+        <!-- Track Order Floating Button -->
+    <button id="track-order-btn" class="fixed bottom-24 left-4 z-[55] bg-[#6B4430] text-white px-4 py-3 rounded-full shadow-lg font-bold flex items-center gap-2 hidden hover:bg-[#2E9E78] transition-colors" onclick="openTrackModal()">
+      <span class="text-xl">🛵</span>
+      <span>
+        <span class="lang-en">Track Order</span>
+        <span class="lang-am">ትዕዛዝ ይከታተሉ</span>
+      </span>
+    </button>
+    <!-- Order Tracking Modal -->
+    <div id="track-modal" class="modal fixed inset-0 z-[80] hidden items-center justify-center bg-black/60 px-4">
+      <div class="bg-white rounded-2xl w-full max-w-sm p-6 relative">
+        <button data-close-modal class="absolute top-3 right-4 text-2xl leading-none text-black" onclick="closeTrackModal()">✕</button>
+        
+        <h3 class="text-2xl font-extrabold text-[#6B4430] mb-1 text-center">Order Status</h3>
+        <p id="track-order-id" class="text-center text-[#2E9E78] font-bold mb-6"></p>
+
+        <div class="space-y-6">
+          <!-- Step 1: Received -->
+          <div class="flex items-center gap-4">
+            <div id="step-new" class="w-8 h-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-bold z-10 relative">1</div>
+            <div>
+              <p class="font-bold text-[#6B4430]"><span class="lang-en">Order Received</span><span class="lang-am">ትዕዛዝ ተቀብለናል</span></p>
+            </div>
+          </div>
+          <div class="w-0.5 h-6 bg-gray-200 -mt-6 ml-4"></div>
+
+          <!-- Step 2: Preparing -->
+          <div class="flex items-center gap-4">
+            <div id="step-confirmed" class="w-8 h-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-bold z-10 relative">2</div>
+            <div>
+              <p class="font-bold text-[#6B4430]"><span class="lang-en">Preparing</span><span class="lang-am">በዝግጅት ላይ</span></p>
+            </div>
+          </div>
+          <div class="w-0.5 h-6 bg-gray-200 -mt-6 ml-4"></div>
+
+          <!-- Step 3: Ready -->
+          <div class="flex items-center gap-4">
+            <div id="step-ready" class="w-8 h-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-bold z-10 relative">3</div>
+            <div>
+              <p class="font-bold text-[#6B4430]"><span class="lang-en">Ready for Pickup</span><span class="lang-am">ዝግጁ ሆኗል</span></p>
+            </div>
+          </div>
+          <div class="w-0.5 h-6 bg-gray-200 -mt-6 ml-4"></div>
+
+          <!-- Step 4: Paid -->
+          <div class="flex items-center gap-4">
+            <div id="step-paid" class="w-8 h-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-bold z-10 relative">4</div>
+            <div>
+              <p class="font-bold text-[#6B4430]"><span class="lang-en">Paid / Completed</span><span class="lang-am">ተከፍሏል / ተጠናቋል</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      
     <script define:vars={{ baseUrl: import.meta.env.BASE_URL }}>
       // ---------- Coming Soon Toast ----------
       function showComingSoon() {
@@ -657,19 +713,20 @@ const getImgUrl = (path) => {
       if (overlay) overlay.addEventListener("click", closeMenu);
 
       // ---------- Popups ----------
-      function openModal(id) {
+      window.openModal = function(id) {
         const modal = document.getElementById(id);
         if (modal) {
           modal.classList.remove("hidden");
           modal.classList.add("flex");
         }
-      }
-      function closeAllModals() {
+      };
+      
+      window.closeAllModals = function() {
         document.querySelectorAll(".modal").forEach((m) => {
           m.classList.add("hidden");
           m.classList.remove("flex");
         });
-      }
+      };
 
       const openContactBtn = document.getElementById("open-contact");
       const openFeedbackBtn = document.getElementById("open-feedback");
@@ -744,7 +801,7 @@ const getImgUrl = (path) => {
         wrap.classList.remove("hidden");
       }
 
-           document.querySelectorAll(".item-card").forEach((card) => {
+      document.querySelectorAll(".item-card").forEach((card) => {
         card.addEventListener("click", () => {
           const item = JSON.parse(card.dataset.item);
 
@@ -1003,7 +1060,7 @@ const getImgUrl = (path) => {
       success.id = "success-modal";
       success.className =
         "modal fixed inset-0 z-[80] hidden items-center justify-center bg-black/50 px-4";
-           success.innerHTML = `
+      success.innerHTML = `
       <div class="bg-white rounded-2xl w-full max-w-sm p-6 text-center max-h-[90vh] overflow-y-auto">
         <div class="text-5xl mb-2">✅</div>
         <h3 class="text-2xl font-extrabold text-[#6B4430] mb-2">
@@ -1057,13 +1114,19 @@ const getImgUrl = (path) => {
       document
         .getElementById("close-success")
         .addEventListener("click", closeAllModals);
-              document
+      document
         .getElementById("success-whatsapp")
         .addEventListener("click", () => {
           setTimeout(closeAllModals, 300);
         });
 
-            document.addEventListener("order-placed", (e) => {
+      document.addEventListener("order-placed", (e) => {
+        // --- ADDED TRACKING LINES HERE ---
+        localStorage.setItem("activeOrderId", e.detail.code);
+        const trackBtn = document.getElementById("track-order-btn");
+        if (trackBtn) trackBtn.classList.remove("hidden");
+        // ---------------------------------
+
         Object.keys(cart).forEach((k) => delete cart[k]);
         refreshQty();
         document.getElementById("cust-name").value = "";
@@ -1159,12 +1222,12 @@ const getImgUrl = (path) => {
 
       
       // ---------- Search ----------
-           const searchCards = Array.from(document.querySelectorAll('.item-card')).map((card) => {
-            const item = JSON.parse(card.dataset.item);
-            const sec = card.closest('section');
-            const heading = sec ? sec.querySelector('h2') : null;
-            const categoryText = heading ? heading.textContent : '';
-            return { card, text: (item.name.en + ' ' + item.name.am + ' ' + categoryText).toLowerCase() };
+      const searchCards = Array.from(document.querySelectorAll('.item-card')).map((card) => {
+        const item = JSON.parse(card.dataset.item);
+        const sec = card.closest('section');
+        const heading = sec ? sec.querySelector('h2') : null;
+        const categoryText = heading ? heading.textContent : '';
+        return { card, text: (item.name.en + ' ' + item.name.am + ' ' + categoryText).toLowerCase() };
       });
       const searchSections = Array.from(
         new Set(searchCards.map((c) => c.card.closest('section')).filter(Boolean))
@@ -1205,11 +1268,10 @@ const getImgUrl = (path) => {
         searchInput.addEventListener('input', runSearch);
       }
 
-      
     </script>
-    <script>
+        <script>
         import { db } from '../lib/firebase';
-        import { doc, runTransaction, serverTimestamp } from 'firebase/firestore';
+        import { doc, runTransaction, serverTimestamp, onSnapshot } from 'firebase/firestore';
 
         // Today's date in Ethiopia time
         function addisToday() {
@@ -1223,6 +1285,15 @@ const getImgUrl = (path) => {
           return { year: get('year'), month: get('month'), day: get('day') };
         }
 
+        // Helper function to get initials (e.g., "John Doe" -> "JD")
+        function getInitials(fullName) {
+          if (!fullName) return 'FM';
+          const parts = fullName.trim().toUpperCase().replace(/[^A-Z\s]/g, '').split(/\s+/);
+          if (parts.length === 0 || parts[0] === '') return 'FM';
+          if (parts.length === 1) return parts[0].substring(0, 2).padEnd(2, 'X'); 
+          return (parts[0][0] + parts[parts.length - 1][0]).substring(0, 2);
+        }
+
         document.addEventListener('submit-order', async (e) => {
           const { name, phone, items, total } = (e as CustomEvent).detail;
           const btn = document.getElementById('place-order') as HTMLButtonElement;
@@ -1234,24 +1305,14 @@ const getImgUrl = (path) => {
           try {
             const { year, month, day } = addisToday();
             const counterRef = doc(db, 'counters', year + '-' + month + '-' + day);
+            const initials = getInitials(name);
 
-                      // Helper function to get initials (e.g., "John Doe" -> "JD")
-          function getInitials(fullName) {
-            if (!fullName) return 'FM';
-            const parts = fullName.trim().toUpperCase().replace(/[^A-Z\s]/g, '').split(/\s+/);
-            if (parts.length === 0 || parts[0] === '') return 'FM';
-            if (parts.length === 1) return parts[0].substring(0, 2).padEnd(2, 'X'); 
-            return (parts[0][0] + parts[parts.length - 1][0]).substring(0, 2);
-          }
-
-          const initials = getInitials(name);
-
-          const code = await runTransaction(db, async (tx) => {
-            const snap = await tx.get(counterRef);
-            const next = snap.exists() ? snap.data().count + 1 : 1;
-            
-            // The new Order ID format: JD-11-2-001
-            const orderCode = initials + '-' + month + '-' + day + '-' + String(next).padStart(3, '0');
+            const code = await runTransaction(db, async (tx) => {
+              const snap = await tx.get(counterRef);
+              const next = snap.exists() ? snap.data().count + 1 : 1;
+              
+              // The new Order ID format: JD-11-2-001
+              const orderCode = initials + '-' + month + '-' + day + '-' + String(next).padStart(3, '0');
 
               tx.set(counterRef, { count: next });
               tx.set(doc(db, 'orders', orderCode), {
@@ -1276,9 +1337,75 @@ const getImgUrl = (path) => {
             btn.classList.remove('opacity-60');
           }
         });
+
+        // ---------- Order Tracking Logic ----------
+        let trackUnsubscribe = null;
+
+        const savedOrderId = localStorage.getItem("activeOrderId");
+        if (savedOrderId) {
+          const btn = document.getElementById("track-order-btn");
+          if (btn) btn.classList.remove("hidden");
+        }
+
+        window.openTrackModal = function() {
+          const activeOrderId = localStorage.getItem("activeOrderId");
+          if (!activeOrderId) return;
+
+          const trackOrderIdEl = document.getElementById("track-order-id");
+          if (trackOrderIdEl) trackOrderIdEl.textContent = "#" + activeOrderId;
+          
+          // Use the global openModal from the first script
+          (window as any).openModal("track-modal");
+
+          // 1. Reset ALL 4 steps to grey
+          const steps = ['step-new', 'step-confirmed', 'step-ready', 'step-paid'];
+          steps.forEach(s => {
+            const el = document.getElementById(s);
+            if (el) el.className = "w-8 h-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-bold z-10 relative";
+          });
+
+          if (trackUnsubscribe) trackUnsubscribe();
+          
+          const orderRef = doc(db, "orders", activeOrderId);
+          trackUnsubscribe = onSnapshot(orderRef, (docSnap) => {
+            if (docSnap.exists()) {
+              const data = docSnap.data();
+              const status = data.status;
+
+              const setGreen = (id) => {
+                const el = document.getElementById(id);
+                if (el) el.className = "w-8 h-8 rounded-full bg-[#2E9E78] text-white flex items-center justify-center font-bold z-10 relative";
+              };
+
+              // 2. Light up the steps based on status
+              setGreen('step-new'); 
+              if (status === 'Confirmed' || status === 'Ready' || status === 'Paid') setGreen('step-confirmed');
+              if (status === 'Ready' || status === 'Paid') setGreen('step-ready');
+              if (status === 'Paid') setGreen('step-paid'); // <--- THIS IS THE NEW LINE
+
+              if (status === 'Cancelled') {
+                steps.forEach(s => {
+                  const el = document.getElementById(s);
+                  if (el) el.className = "w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center font-bold z-10 relative";
+                });
+              }
+            } else {
+              localStorage.removeItem("activeOrderId");
+              (window as any).closeTrackModal();
+            }
+          });
+        };
+
+        window.closeTrackModal = function() {
+          (window as any).closeAllModals();
+          if (trackUnsubscribe) {
+            trackUnsubscribe();
+            trackUnsubscribe = null;
+          }
+        };
     </script>
 
-       <style is:global>
+    <style is:global>
       button,
       a,
       select,
